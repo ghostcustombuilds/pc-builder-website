@@ -23,12 +23,14 @@ import {
   ArrowUp,
   Shield,
   Clock,
+  LucideProps,
 } from "lucide-react"
+import React from "react"
 
 interface GuideSection {
   id: string
   title: string
-  icon: any
+  icon: React.ComponentType<LucideProps>
   color: string
   description: string
   content: {
@@ -42,7 +44,7 @@ interface GuideSection {
 }
 
 const componentGuides: GuideSection[] = [
-  {
+    {
     id: "cpu",
     title: "CPU (Processor)",
     icon: Cpu,
@@ -360,7 +362,7 @@ export function EducationalGuides() {
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Complete PC Building Guide</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Everything you need to know to build your perfect gaming PC with confidence. From components to common
-            mistakes, we've got you covered.
+            mistakes, we&apos;ve got you covered.
           </p>
         </div>
 
@@ -384,9 +386,9 @@ export function EducationalGuides() {
                 </CardHeader>
                 <CardContent className="prose prose-sm max-w-none">
                   <p className="text-muted-foreground mb-4">
-                    Building a PC might seem intimidating, but it's essentially like assembling a high-tech puzzle. Each
+                    Building a PC might seem intimidating, but it&apos;s essentially like assembling a high-tech puzzle. Each
                     component has a specific role, and understanding these roles helps you make informed decisions about
-                    your build. Don't worry - thousands of people build their first PC every day, and with the right
+                    your build. Don&apos;t worry - thousands of people build their first PC every day, and with the right
                     guidance, you can too!
                   </p>
 
@@ -451,8 +453,8 @@ export function EducationalGuides() {
                     </h4>
                     <p className="text-sm text-green-700 dark:text-green-300">
                       Remember: PC building is much easier than it looks. Components only fit one way, and modern parts
-                      are designed to be user-friendly. Take your time, follow guides, and don't be afraid to ask for
-                      help. You've got this!
+                      are designed to be user-friendly. Take your time, follow guides, and don&apos;t be afraid to ask for
+                      help. You&apos;ve got this!
                     </p>
                   </div>
                 </CardContent>
@@ -546,7 +548,7 @@ export function EducationalGuides() {
             <div className="text-center mb-8">
               <h3 className="text-2xl font-bold text-foreground mb-4">Top 5 Mistakes New PC Builders Make</h3>
               <p className="text-muted-foreground max-w-2xl mx-auto">
-                Learn from others' mistakes! These are the most common errors that can cost you money, performance, or
+                Learn from others&apos; mistakes! These are the most common errors that can cost you money, performance, or
                 even damage your components.
               </p>
             </div>
@@ -631,7 +633,7 @@ export function EducationalGuides() {
                     <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">Pro Tip: Take Your Time</h4>
                     <p className="text-sm text-blue-700 dark:text-blue-300">
                       The biggest mistake is rushing. PC building should be enjoyable, not stressful. Research your
-                      components, watch build guides, and don't hesitate to double-check compatibility. A few extra
+                      components, watch build guides, and don&apos;t hesitate to double-check compatibility. A few extra
                       hours of planning can save you hundreds of dollars and lots of frustration.
                     </p>
                   </div>
@@ -729,7 +731,7 @@ export function EducationalGuides() {
                       <ul className="space-y-1 text-sm text-muted-foreground">
                         <li>• Motherboard (unless changing platforms)</li>
                         <li>• PSU (unless insufficient or failing)</li>
-                        <li>• Case (unless airflow or space issues)</li>
+                        <li>• Case (unless aesthetics or space issues)</li>
                       </ul>
                     </div>
                   </div>

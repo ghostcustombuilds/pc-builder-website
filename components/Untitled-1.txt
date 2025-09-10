@@ -1,0 +1,125 @@
+import { useState } from "react"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Check, Copy } from "lucide-react"
+// Remove these imports; reference images directly in <img src="..."/>
+
+type CopyBuildModalProps = {
+  selectedComponents: Record<string, { name: string; price: number }>
+  isOpen: boolean
+  onOpenChange: (open: boolean) => void
+}
+
+function PurchaseLogos({ componentName }: { componentName: string }) {
+  const searchQuery = encodeURIComponent(componentName)
+  return (
+    <div className="flex gap-2 ml-2">
+      <a
+        href={`https://www.amazon.com/s?k=${searchQuery}&tag=ghostcustom12-20`}
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Search on Amazon"
+      >
+        <img src="/amazon-logo.svg" alt="Amazon" className="w-6 h-6" />
+      </a>
+      <a
+        href={`https://www.newegg.com/p/pl?d=${searchQuery}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Search on Newegg"
+      >
+        <img src="/newegg-logo.svg" alt="Newegg" className="w-6 h-6" />
+      </a>
+      <a
+        href={`https://www.bestbuy.com/site/searchpage.jsp?st=${searchQuery}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Search on Best Buy"
+      >
+        <img src="/bestbuy-logo.svg" alt="Best Buy" className="w-6 h-6" />
+      </a>
+    </div>
+  )
+}
+
+export function CopyBuildModal({ selectedComponents, isOpen, onOpenChange }: CopyBuildModalProps) {
+  const [copied, setCopied] = useState(false)
+
+  const generateBuildList = () => {
+    const components = [
+      { key: 'cpu', label: 'CPU' },
+      { key: 'gpu', label: 'GPU' },
+      { key: 'motherboard', label: 'Motherboard' },
+      { key: 'ram', label: 'RAM' },
+      { key: 'storage', label: 'Storage' },
+      { key: 'psu', label: 'PSU' },
+      { key: 'case', label: 'Case' },
+    ]
+    return components
+      .filter(comp => selectedComponents[comp.key])
+      .map(comp => {
+        const component = selectedComponents[comp.key]!
+        return `${comp.label}: ${component.name} - $${component.price}`
+      })
+      .join('\n')
+  }
+
+  const handleCopyToClipboard = async () => {
+    try {
+      const buildList = generateBuildList()
+      await navigator.clipboard.writeText(buildList)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (err) {
+      console.error('Failed to copy to clipboard:', err)
+    }
+  }
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-lg">
+        <DialogHeader>
+          <DialogTitle>Your Custom Build Parts List</DialogTitle>
+          <DialogDescription>
+            Below are your selected components with direct retailer links.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div className="divide-y divide-muted">
+            {Object.entries(selectedComponents).map(([key, component]) =>
+              component ? (
+                <div key={key} className="flex items-center justify-between py-3">
+                  <div>
+                    <span className="font-medium">{component.name}</span>
+                    <span className="text-muted-foreground ml-2">${component.price}</span>
+                  </div>
+                  <PurchaseLogos componentName={component.name} />
+                </div>
+              ) : null
+            )}
+          </div>
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={handleCopyToClipboard}
+          >
+            {copied ? (
+              <>
+                <Check className="w-4 h-4 mr-2" />
+                Copied!
+              </>
+            ) : (
+              <>
+                <Copy className="w-4 h-4 mr-2" />
+                Copy Plain Text List
+              </>
+            )}
+          </Button>
+          <div className="text-xs text-muted-foreground mt-2 text-center">
+            <strong>Affiliate Disclaimer:</strong> Some links are affiliate links. We may earn a commission if you purchase through them, at no extra cost to you.
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}

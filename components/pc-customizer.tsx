@@ -7,7 +7,8 @@ import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import Image from "next/image"
 import {
   Cpu,
   Monitor,
@@ -37,13 +38,13 @@ function PurchaseLinks({ component, className = "" }: PurchaseLinkProps) {
   return (
     <div className={`flex gap-2 group ${className}`}>
       <a
-        href={`https://www.amazon.com/s?k=${searchQuery}`}
+        href={`https://www.amazon.com/s?k=${searchQuery}&tag=ghostcustom12-20`}
         target="_blank"
         rel="noopener noreferrer"
         className="inline-block p-1 hover:bg-accent/10 rounded transition-all duration-200 hover:scale-110 hover:brightness-110 cursor-pointer group-hover:opacity-50 hover:!opacity-100"
         title="Search on Amazon"
       >
-        <img src="/amazon-logo.svg" alt="Amazon" className="w-6 h-6 pointer-events-none text-white hover:text-accent" />
+        <Image src="/amazon-logo.svg" alt="Amazon" width={24} height={24} className="pointer-events-none text-white hover:text-accent" />
       </a>
       <a
         href={`https://www.newegg.com/p/pl?d=${searchQuery}`}
@@ -52,7 +53,7 @@ function PurchaseLinks({ component, className = "" }: PurchaseLinkProps) {
         className="inline-block p-1 hover:bg-accent/10 rounded transition-all duration-200 hover:scale-110 hover:brightness-110 cursor-pointer group-hover:opacity-50 hover:!opacity-100"
         title="Search on Newegg"
       >
-        <img src="/newegg-logo.svg" alt="Newegg" className="w-6 h-6 pointer-events-none text-white hover:text-accent" />
+        <Image src="/newegg-logo.svg" alt="Newegg" width={24} height={24} className="pointer-events-none text-white hover:text-accent" />
       </a>
       <a
         href={`https://www.bestbuy.com/site/searchpage.jsp?st=${searchQuery}`}
@@ -61,7 +62,7 @@ function PurchaseLinks({ component, className = "" }: PurchaseLinkProps) {
         className="inline-block p-1 hover:bg-accent/10 rounded transition-all duration-200 hover:scale-110 hover:brightness-110 cursor-pointer group-hover:opacity-50 hover:!opacity-100"
         title="Search on Best Buy"
       >
-        <img src="/bestbuy-logo.svg" alt="Best Buy" className="w-6 h-6 pointer-events-none text-white hover:text-accent" />
+        <Image src="/bestbuy-logo.svg" alt="Best Buy" width={24} height={24} className="pointer-events-none text-white hover:text-accent" />
       </a>
     </div>
   )
@@ -683,7 +684,6 @@ export function PCCustomizer() {
     const cpu = getComponent("cpu", selectedBuild.cpu)
     const motherboard = getComponent("motherboard", selectedBuild.motherboard)
     const ram = getComponent("ram", selectedBuild.ram)
-    const gpu = getComponent("gpu", selectedBuild.gpu)
     const psu = getComponent("psu", selectedBuild.psu)
 
     if (cpu && motherboard) {
@@ -782,7 +782,7 @@ export function PCCustomizer() {
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">PC Build Customizer</h2>
           <p className="text-base text-muted-foreground max-w-2xl mx-auto font-normal">
-            Customize your build and see real-time performance estimates for popular games. We'll check compatibility,
+            Customize your build and see real-time performance estimates for popular games. We&apos;ll check compatibility,
             calculate power requirements, and show expected FPS.
           </p>
         </div>
@@ -1093,7 +1093,7 @@ export function PCCustomizer() {
                       </Button>
                     </div>
                     <p className="text-xs text-muted-foreground text-center">
-                      Choose how you'd like to proceed with your build
+                      Choose how you&apos;d like to proceed with your build
                     </p>
                   </div>
                 )}
@@ -1109,7 +1109,7 @@ export function PCCustomizer() {
                       {activePreset.charAt(0).toUpperCase() + activePreset.slice(1)} Build
                     </Badge>
                     <p className="text-sm text-muted-foreground">
-                      You're using a preset build. Modify any component to create a custom build.
+                      You&apos;re using a preset build. Modify any component to create a custom build.
                     </p>
                   </div>
                 </CardContent>

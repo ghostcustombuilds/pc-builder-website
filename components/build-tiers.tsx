@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import Image from "next/image"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -15,17 +15,16 @@ interface PurchaseLinkProps {
 
 function PurchaseLinks({ component, className = "" }: PurchaseLinkProps) {
   const searchQuery = encodeURIComponent(component)
-  
   return (
     <div className={`flex gap-2 group ${className}`}>
       <a
-        href={`https://www.amazon.com/s?k=${searchQuery}`}
+        href={`https://www.amazon.com/s?k=${searchQuery}&tag=ghostcustom12-20`}
         target="_blank"
         rel="noopener noreferrer"
         className="inline-block p-1 hover:bg-accent/10 rounded transition-all duration-200 hover:scale-110 hover:brightness-110 cursor-pointer group-hover:opacity-50 hover:!opacity-100"
         title="Search on Amazon"
       >
-        <img src="/amazon-logo.svg" alt="Amazon" className="w-6 h-6 pointer-events-none text-white hover:text-accent" />
+        <Image src="/amazon-logo.svg" alt="Amazon" width={24} height={24} className="pointer-events-none text-white hover:text-accent" />
       </a>
       <a
         href={`https://www.newegg.com/p/pl?d=${searchQuery}`}
@@ -34,7 +33,7 @@ function PurchaseLinks({ component, className = "" }: PurchaseLinkProps) {
         className="inline-block p-1 hover:bg-accent/10 rounded transition-all duration-200 hover:scale-110 hover:brightness-110 cursor-pointer group-hover:opacity-50 hover:!opacity-100"
         title="Search on Newegg"
       >
-        <img src="/newegg-logo.svg" alt="Newegg" className="w-6 h-6 pointer-events-none text-white hover:text-accent" />
+        <Image src="/newegg-logo.svg" alt="Newegg" width={24} height={24} className="pointer-events-none text-white hover:text-accent" />
       </a>
       <a
         href={`https://www.bestbuy.com/site/searchpage.jsp?st=${searchQuery}`}
@@ -43,7 +42,7 @@ function PurchaseLinks({ component, className = "" }: PurchaseLinkProps) {
         className="inline-block p-1 hover:bg-accent/10 rounded transition-all duration-200 hover:scale-110 hover:brightness-110 cursor-pointer group-hover:opacity-50 hover:!opacity-100"
         title="Search on Best Buy"
       >
-        <img src="/bestbuy-logo.svg" alt="Best Buy" className="w-6 h-6 pointer-events-none text-white hover:text-accent" />
+        <Image src="/bestbuy-logo.svg" alt="Best Buy" width={24} height={24} className="pointer-events-none text-white hover:text-accent" />
       </a>
     </div>
   )
@@ -312,14 +311,14 @@ const buildTiers = [
 
 interface BuildTiersProps {
   selectedBuilds: string[]
-  setSelectedBuilds: (builds: string[]) => void
+  setSelectedBuilds: React.Dispatch<React.SetStateAction<string[]>>
 }
 
 export function BuildTiers({ selectedBuilds, setSelectedBuilds }: BuildTiersProps) {
   const handleBuildToggle = (buildId: string) => {
-    setSelectedBuilds(prev => {
+    setSelectedBuilds((prev: string[]) => {
       if (prev.includes(buildId)) {
-        return prev.filter(id => id !== buildId)
+        return prev.filter((id: string) => id !== buildId)
       } else if (prev.length < 4) {
         return [...prev, buildId]
       }
@@ -465,7 +464,7 @@ export function BuildTiers({ selectedBuilds, setSelectedBuilds }: BuildTiersProp
                                       <span className="text-muted-foreground truncate">{game.name}</span>
                                       <span className="text-accent font-medium ml-2 flex-shrink-0">
                                         {game[resolution as keyof typeof game] && typeof game[resolution as keyof typeof game] === 'object' 
-                                          ? (game[resolution as keyof typeof game] as any)[setting] 
+                                          ? (game[resolution as keyof typeof game] as Record<string, string>)[setting] 
                                           : ''}
                                       </span>
                                     </div>

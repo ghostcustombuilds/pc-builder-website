@@ -1,53 +1,44 @@
 "use client"
 
-import { useState } from "react"
-import { BuildTiers } from "@/components/build-tiers"
 import { Hero } from "@/components/hero"
-import { Navigation } from "@/components/navigation"
+import { BuildTiers } from "@/components/build-tiers"
 import { PCCustomizer } from "@/components/pc-customizer"
 import { GameMatcher } from "@/components/game-matcher"
+import { EducationalGuides } from "@/components/educational-guides"
 import { ComparisonTools } from "@/components/comparison-tools"
 import { BeginnerWizard } from "@/components/beginner-wizard"
-import { EducationalGuides } from "@/components/educational-guides"
+import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
+import { useState } from "react"
 
 export default function HomePage() {
   const [selectedBuilds, setSelectedBuilds] = useState<string[]>([])
+
   return (
-    <div className="min-h-screen bg-background">
+    <>
       <Navigation />
-      <Hero />
-      
-      {/* Section Separator */}
-      <div className="border-t border-border/20"></div>
-      
-      <BuildTiers selectedBuilds={selectedBuilds} setSelectedBuilds={setSelectedBuilds} />
-      
-      {/* Section Separator */}
-      <div className="border-t border-border/20"></div>
-      
-      <PCCustomizer />
-      
-      {/* Section Separator */}
-      <div className="border-t border-border/20"></div>
-      
-      <GameMatcher />
-      
-      {/* Section Separator */}
-      <div className="border-t border-border/20"></div>
-      
-      <ComparisonTools selectedBuilds={selectedBuilds} />
-      
-      {/* Section Separator */}
-      <div className="border-t border-border/20"></div>
-      
-      <BeginnerWizard />
-      
-      {/* Section Separator */}
-      <div className="border-t border-border/20"></div>
-      
-      <EducationalGuides />
+      <main className="min-h-screen bg-background">
+        <Hero />
+
+        <div className="border-t border-border/20"></div>
+        <BuildTiers selectedBuilds={selectedBuilds} setSelectedBuilds={setSelectedBuilds} />
+
+        <div className="border-t border-border/20"></div>
+        <ComparisonTools selectedBuilds={selectedBuilds} />
+        
+        <div className="border-t border-border/20"></div>
+        <PCCustomizer />
+
+        <div className="border-t border-border/20"></div>
+        <GameMatcher />
+
+        <div className="border-t border-border/20"></div>
+        <EducationalGuides />
+
+        <div className="border-t border-border/20"></div>
+        <BeginnerWizard />
+      </main>
       <Footer />
-    </div>
+    </>
   )
 }

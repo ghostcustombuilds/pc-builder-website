@@ -288,7 +288,7 @@ export function BeginnerWizard() {
               <h2 className="text-3xl font-bold text-foreground">Your Perfect PC Build</h2>
             </div>
             <p className="text-lg text-muted-foreground">
-              Based on your preferences, here's the ideal PC build for you
+              Based on your preferences, here&apos;s the ideal PC build for you
             </p>
           </div>
 
@@ -385,7 +385,7 @@ export function BeginnerWizard() {
             <h2 className="text-3xl font-bold text-foreground">PC Building Wizard</h2>
           </div>
           <p className="text-lg text-muted-foreground">
-            Answer 3 quick questions and we'll recommend the perfect PC build for you
+            Answer 3 quick questions and we&apos;ll recommend the perfect PC build for you
           </p>
         </div>
 
@@ -425,7 +425,7 @@ export function BeginnerWizard() {
             {currentStep === 0 && (
               <div className="space-y-4">
                 <div className="text-center">
-                  <h3 className="text-xl font-semibold mb-2">What's your budget?</h3>
+                  <h3 className="text-xl font-semibold mb-2">Whats your budget?</h3>
                   <p className="text-muted-foreground">This helps us recommend the right components for your needs</p>
                 </div>
                 <RadioGroup value={wizardData.budget} onValueChange={handleBudgetSelect}>
@@ -478,7 +478,7 @@ export function BeginnerWizard() {
             {currentStep === 2 && (
               <div className="space-y-4">
                 <div className="text-center">
-                  <h3 className="text-xl font-semibold mb-2">What's your style preference?</h3>
+                  <h3 className="text-xl font-semibold mb-2">Whats your style preference?</h3>
                   <p className="text-muted-foreground">This helps us choose the right case and components</p>
                 </div>
                 <RadioGroup value={wizardData.style} onValueChange={handleStyleSelect}>

@@ -34,7 +34,7 @@ export function Hero() {
 
         <p className="text-lg text-muted-foreground mb-8 text-pretty max-w-2xl mx-auto animate-fade-in-up delay-200 font-normal">
           Create the perfect gaming setup with our intelligent build recommendations. From budget builds to high-end
-          rigs, we'll help you run any game at your desired performance.
+          rigs, we&#39;ll help you run any game at your desired performance.
         </p>
 
         <div className="flex flex-wrap justify-center gap-8 mb-8 animate-fade-in-up delay-300">

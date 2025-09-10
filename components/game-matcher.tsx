@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Image from "next/image"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -1303,10 +1304,12 @@ export function GameMatcher() {
                   onClick={() => setSelectedGame(game)}
                 >
                   <CardHeader className="pb-3">
-                    <img
-                      src={game.image || "/placeholder.svg"}
+                    <Image
+                      src={game.image}
                       alt={game.name}
-                      className="w-full h-32 object-cover rounded-md mb-3"
+                      width={64}
+                      height={36}
+                      className="rounded shadow mb-3"
                     />
                     <div className="flex items-center justify-between">
                       <CardTitle className="text-lg">{game.name}</CardTitle>
