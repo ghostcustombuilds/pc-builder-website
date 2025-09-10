@@ -1,0 +1,8 @@
+<a
+  href={`https://www.amazon.com/s?k=${encodeURIComponent(componentName)}&tag=ghostcustom12-20`}
+  target="_blank"
+  rel="noopener noreferrer"
+  title="Search on Amazon"
+>
+  {/* ...existing code... */}
+</a>
