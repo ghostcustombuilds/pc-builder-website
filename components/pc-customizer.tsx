@@ -6,8 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import {
   Cpu,
@@ -16,19 +14,10 @@ import {
   MemoryStick,
   Power,
   Clapperboard as Motherboard,
-  AlertTriangle,
-  CheckCircle,
-  DollarSign,
-  Gamepad2,
-  TrendingUp,
   Box,
-  Wrench,
-  Share,
   Copy,
   Check,
 } from "lucide-react"
-
-// --- INTERFACES AND DATA (Should be moved to a separate file later) ---
 
 interface PCComponent {
   id: string
@@ -41,38 +30,86 @@ interface PCComponent {
 }
 
 const components: Record<string, PCComponent[]> = {
-  cpu: [ { id: "ryzen5-5600g", name: "AMD Ryzen 5 5600G", price: 159, category: "cpu", compatibility: ["am4"], power: 65, performanceTier: "budget", }, { id: "ryzen5-7600x", name: "AMD Ryzen 5 7600X", price: 229, category: "cpu", compatibility: ["am5"], power: 105, performanceTier: "basic", }, { id: "i7-14700k", name: "Intel Core i7-14700K", price: 399, category: "cpu", compatibility: ["lga1700"], power: 125, performanceTier: "creator", }, { id: "i9-14900k", name: "Intel Core i9-14900K", price: 589, category: "cpu", compatibility: ["lga1700"], power: 125, performanceTier: "master", } ],
-  gpu: [ { id: "gtx1660s", name: "NVIDIA GTX 1660 Super", price: 229, category: "gpu", compatibility: ["pcie4"], power: 125, performanceTier: "budget", }, { id: "rtx4060", name: "NVIDIA RTX 4060", price: 299, category: "gpu", compatibility: ["pcie4"], power: 115, performanceTier: "basic", }, { id: "rtx4070s", name: "NVIDIA RTX 4070 Super", price: 699, category: "gpu", compatibility: ["pcie4"], power: 220, performanceTier: "advanced", }, { id: "rtx4080s", name: "NVIDIA RTX 4080 Super", price: 999, category: "gpu", compatibility: ["pcie4"], power: 320, performanceTier: "master", } ],
-  motherboard: [ { id: "a520m", name: "ASUS A520M-A", price: 69, category: "motherboard", compatibility: ["am4", "ddr4"], power: 0, performanceTier: "everyday", }, { id: "b450-gaming", name: "MSI B450 Gaming Plus", price: 89, category: "motherboard", compatibility: ["am4", "ddr4"], power: 0, performanceTier: "budget", }, { id: "b650-gaming", name: "MSI B650 Gaming Plus", price: 179, category: "motherboard", compatibility: ["am5", "ddr5"], power: 0, performanceTier: "basic", }, { id: "z790-gaming", name: "MSI Z790 Gaming Pro", price: 219, category: "motherboard", compatibility: ["lga1700", "ddr5"], power: 0, performanceTier: "advanced", } ],
-  ram: [ { id: "ddr4-16gb", name: "16GB DDR4-3200", price: 59, category: "ram", compatibility: ["ddr4"], power: 8, performanceTier: "budget", }, { id: "ddr5-16gb", name: "16GB DDR5-5600", price: 89, category: "ram", compatibility: ["ddr5"], power: 10, performanceTier: "basic", }, { id: "ddr5-32gb", name: "32GB DDR5-6000", price: 179, category: "ram", compatibility: ["ddr5"], power: 15, performanceTier: "advanced", } ],
-  storage: [ { id: "nvme-500gb", name: "500GB NVMe SSD", price: 59, category: "storage", compatibility: ["nvme"], power: 5, performanceTier: "budget", }, { id: "nvme-1tb", name: "1TB NVMe SSD", price: 89, category: "storage", compatibility: ["nvme"], power: 7, performanceTier: "basic", }, { id: "nvme-2tb", name: "2TB NVMe SSD", price: 179, category: "storage", compatibility: ["nvme"], power: 8, performanceTier: "advanced", }, { id: "nvme-4tb", name: "4TB NVMe SSD", price: 399, category: "storage", compatibility: ["nvme"], power: 10, performanceTier: "master", } ],
-  psu: [ { id: "psu-450w", name: "450W 80+ Bronze", price: 59, category: "psu", compatibility: ["atx"], power: -450, performanceTier: "everyday", }, { id: "psu-650w", name: "650W 80+ Gold", price: 89, category: "psu", compatibility: ["atx"], power: -650, performanceTier: "budget", }, { id: "psu-850w", name: "850W 80+ Gold", price: 149, category: "psu", compatibility: ["atx"], power: -850, performanceTier: "advanced", }, { id: "psu-1000w", name: "1000W 80+ Gold", price: 199, category: "psu", compatibility: ["atx"], power: -1000, performanceTier: "master", } ],
-  case: [ { id: "case-core-1100", name: "Fractal Design Core 1100", price: 49, category: "case", compatibility: ["atx"], power: 0, performanceTier: "everyday", }, { id: "case-4000d", name: "Corsair 4000D Airflow", price: 89, category: "case", compatibility: ["atx"], power: 0, performanceTier: "budget", }, { id: "case-h5-flow", name: "NZXT H5 Flow", price: 99, category: "case", compatibility: ["atx"], power: 0, performanceTier: "esports", }, { id: "case-north", name: "Fractal Design North", price: 149, category: "case", compatibility: ["atx"], power: 0, performanceTier: "creator", } ],
-};
+  cpu: [
+    { id: "ryzen5-5600g", name: "AMD Ryzen 5 5600G", price: 159, category: "cpu", compatibility: ["am4"], power: 65, performanceTier: "budget" },
+    { id: "ryzen5-7600x", name: "AMD Ryzen 5 7600X", price: 229, category: "cpu", compatibility: ["am5"], power: 105, performanceTier: "basic" },
+    { id: "i7-14700k", name: "Intel Core i7-14700K", price: 399, category: "cpu", compatibility: ["lga1700"], power: 125, performanceTier: "creator" },
+    { id: "i9-14900k", name: "Intel Core i9-14900K", price: 589, category: "cpu", compatibility: ["lga1700"], power: 125, performanceTier: "master" },
+  ],
+  gpu: [
+    { id: "gtx1660s", name: "NVIDIA GTX 1660 Super", price: 229, category: "gpu", compatibility: ["pcie4"], power: 125, performanceTier: "budget" },
+    { id: "rtx4060", name: "NVIDIA RTX 4060", price: 299, category: "gpu", compatibility: ["pcie4"], power: 115, performanceTier: "basic" },
+    { id: "rtx4070s", name: "NVIDIA RTX 4070 Super", price: 699, category: "gpu", compatibility: ["pcie4"], power: 220, performanceTier: "advanced" },
+    { id: "rtx4080s", name: "NVIDIA RTX 4080 Super", price: 999, category: "gpu", compatibility: ["pcie4"], power: 320, performanceTier: "master" },
+  ],
+  motherboard: [
+    { id: "a520m", name: "ASUS A520M-A", price: 69, category: "motherboard", compatibility: ["am4", "ddr4"], power: 0, performanceTier: "everyday" },
+    { id: "b450-gaming", name: "MSI B450 Gaming Plus", price: 89, category: "motherboard", compatibility: ["am4", "ddr4"], power: 0, performanceTier: "budget" },
+    { id: "b650-gaming", name: "MSI B650 Gaming Plus", price: 179, category: "motherboard", compatibility: ["am5", "ddr5"], power: 0, performanceTier: "basic" },
+    { id: "z790-gaming", name: "MSI Z790 Gaming Pro", price: 219, category: "motherboard", compatibility: ["lga1700", "ddr5"], power: 0, performanceTier: "advanced" },
+  ],
+  ram: [
+    { id: "ddr4-16gb", name: "16GB DDR4-3200", price: 59, category: "ram", compatibility: ["ddr4"], power: 8, performanceTier: "budget" },
+    { id: "ddr5-16gb", name: "16GB DDR5-5600", price: 89, category: "ram", compatibility: ["ddr5"], power: 10, performanceTier: "basic" },
+    { id: "ddr5-32gb", name: "32GB DDR5-6000", price: 179, category: "ram", compatibility: ["ddr5"], power: 15, performanceTier: "advanced" },
+  ],
+  storage: [
+    { id: "nvme-500gb", name: "500GB NVMe SSD", price: 59, category: "storage", compatibility: ["nvme"], power: 5, performanceTier: "budget" },
+    { id: "nvme-1tb", name: "1TB NVMe SSD", price: 89, category: "storage", compatibility: ["nvme"], power: 7, performanceTier: "basic" },
+    { id: "nvme-2tb", name: "2TB NVMe SSD", price: 179, category: "storage", compatibility: ["nvme"], power: 8, performanceTier: "advanced" },
+    { id: "nvme-4tb", name: "4TB NVMe SSD", price: 399, category: "storage", compatibility: ["nvme"], power: 10, performanceTier: "master" },
+  ],
+  psu: [
+    { id: "psu-450w", name: "450W 80+ Bronze", price: 59, category: "psu", compatibility: ["atx"], power: -450, performanceTier: "everyday" },
+    { id: "psu-650w", name: "650W 80+ Gold", price: 89, category: "psu", compatibility: ["atx"], power: -650, performanceTier: "budget" },
+    { id: "psu-850w", name: "850W 80+ Gold", price: 149, category: "psu", compatibility: ["atx"], power: -850, performanceTier: "advanced" },
+    { id: "psu-1000w", name: "1000W 80+ Gold", price: 199, category: "psu", compatibility: ["atx"], power: -1000, performanceTier: "master" },
+  ],
+  case: [
+    { id: "case-core-1100", name: "Fractal Design Core 1100", price: 49, category: "case", compatibility: ["atx"], power: 0, performanceTier: "everyday" },
+    { id: "case-4000d", name: "Corsair 4000D Airflow", price: 89, category: "case", compatibility: ["atx"], power: 0, performanceTier: "budget" },
+    { id: "case-h5-flow", name: "NZXT H5 Flow", price: 99, category: "case", compatibility: ["atx"], power: 0, performanceTier: "esports" },
+    { id: "case-north", name: "Fractal Design North", price: 149, category: "case", compatibility: ["atx"], power: 0, performanceTier: "creator" },
+  ],
+}
 
 const gamePerformanceDatabase: Record<string, Record<string, Record<string, string>>> = {
-    Fortnite: { everyday: { "1080p": "30+ FPS", "1440p": "20+ FPS" }, budget: { "1080p": "60+ FPS", "1440p": "45+ FPS" }, basic: { "1080p": "120+ FPS", "1440p": "75+ FPS" }, esports: { "1080p": "140+ FPS", "1440p": "100+ FPS" }, advanced: { "1080p": "165+ FPS", "1440p": "120+ FPS" }, creator: { "1080p": "200+ FPS", "1440p": "150+ FPS" }, master: { "1080p": "240+ FPS", "1440p": "165+ FPS" }, },
-    Valorant: { everyday: { "1080p": "80+ FPS", "1440p": "60+ FPS" }, budget: { "1080p": "150+ FPS", "1440p": "100+ FPS" }, basic: { "1080p": "200+ FPS", "1440p": "150+ FPS" }, esports: { "1080p": "250+ FPS", "1440p": "180+ FPS" }, advanced: { "1080p": "300+ FPS", "1440p": "200+ FPS" }, creator: { "1080p": "350+ FPS", "1440p": "250+ FPS" }, master: { "1080p": "400+ FPS", "1440p": "300+ FPS" }, },
-};
+  Fortnite: {
+    everyday: { "1080p": "30+ FPS", "1440p": "20+ FPS" },
+    budget: { "1080p": "60+ FPS", "1440p": "45+ FPS" },
+    basic: { "1080p": "120+ FPS", "1440p": "75+ FPS" },
+    esports: { "1080p": "140+ FPS", "1440p": "100+ FPS" },
+    advanced: { "1080p": "165+ FPS", "1440p": "120+ FPS" },
+    creator: { "1080p": "200+ FPS", "1440p": "150+ FPS" },
+    master: { "1080p": "240+ FPS", "1440p": "165+ FPS" },
+  },
+  Valorant: {
+    everyday: { "1080p": "80+ FPS", "1440p": "60+ FPS" },
+    budget: { "1080p": "150+ FPS", "1440p": "100+ FPS" },
+    basic: { "1080p": "200+ FPS", "1440p": "150+ FPS" },
+    esports: { "1080p": "250+ FPS", "1440p": "180+ FPS" },
+    advanced: { "1080p": "300+ FPS", "1440p": "200+ FPS" },
+    creator: { "1080p": "350+ FPS", "1440p": "250+ FPS" },
+    master: { "1080p": "400+ FPS", "1440p": "300+ FPS" },
+  },
+}
 
 const presetBuilds: Record<string, Record<string, string>> = {
-  everyday: { cpu: "ryzen5-5600g", gpu: "", motherboard: "a520m", ram: "ddr4-16gb", storage: "nvme-500gb", psu: "psu-450w", case: "case-core-1100", },
-  budget: { cpu: "ryzen5-5600g", gpu: "gtx1660s", motherboard: "b450-gaming", ram: "ddr4-16gb", storage: "nvme-500gb", psu: "psu-650w", case: "case-4000d", },
-  basic: { cpu: "ryzen5-7600x", gpu: "rtx4060", motherboard: "b650-gaming", ram: "ddr5-16gb", storage: "nvme-1tb", psu: "psu-850w", case: "case-h5-flow", },
-  esports: { cpu: "ryzen5-7600x", gpu: "rtx4060", motherboard: "b650-gaming", ram: "ddr5-16gb", storage: "nvme-1tb", psu: "psu-850w", case: "case-h5-flow", },
-  advanced: { cpu: "i7-14700k", gpu: "rtx4070s", motherboard: "z790-gaming", ram: "ddr5-32gb", storage: "nvme-2tb", psu: "psu-850w", case: "case-north", },
-  creator: { cpu: "i7-14700k", gpu: "rtx4070s", motherboard: "z790-gaming", ram: "ddr5-32gb", storage: "nvme-2tb", psu: "psu-850w", case: "case-north", },
-  master: { cpu: "i9-14900k", gpu: "rtx4080s", motherboard: "z790-gaming", ram: "ddr5-32gb", storage: "nvme-4tb", psu: "psu-1000w", case: "case-north", },
-};
-
-// --- REUSABLE COMPONENTS ---
+  everyday: { cpu: "ryzen5-5600g", gpu: "", motherboard: "a520m", ram: "ddr4-16gb", storage: "nvme-500gb", psu: "psu-450w", case: "case-core-1100" },
+  budget: { cpu: "ryzen5-5600g", gpu: "gtx1660s", motherboard: "b450-gaming", ram: "ddr4-16gb", storage: "nvme-500gb", psu: "psu-650w", case: "case-4000d" },
+  basic: { cpu: "ryzen5-7600x", gpu: "rtx4060", motherboard: "b650-gaming", ram: "ddr5-16gb", storage: "nvme-1tb", psu: "psu-850w", case: "case-h5-flow" },
+  esports: { cpu: "ryzen5-7600x", gpu: "rtx4060", motherboard: "b650-gaming", ram: "ddr5-16gb", storage: "nvme-1tb", psu: "psu-850w", case: "case-h5-flow" },
+  advanced: { cpu: "i7-14700k", gpu: "rtx4070s", motherboard: "z790-gaming", ram: "ddr5-32gb", storage: "nvme-2tb", psu: "psu-850w", case: "case-north" },
+  creator: { cpu: "i7-14700k", gpu: "rtx4070s", motherboard: "z790-gaming", ram: "ddr5-32gb", storage: "nvme-2tb", psu: "psu-850w", case: "case-north" },
+  master: { cpu: "i9-14900k", gpu: "rtx4080s", motherboard: "z790-gaming", ram: "ddr5-32gb", storage: "nvme-4tb", psu: "psu-1000w", case: "case-north" },
+}
 
 interface PurchaseLinkProps {
-  componentName: string;
+  componentName: string
 }
 
 function PurchaseLinks({ componentName }: PurchaseLinkProps) {
-  const searchQuery = encodeURIComponent(componentName);
+  const searchQuery = encodeURIComponent(componentName)
   return (
     <div className="flex items-center gap-1">
       <a
@@ -106,46 +143,46 @@ function PurchaseLinks({ componentName }: PurchaseLinkProps) {
         <Image src="/bestbuy-logo.svg" alt="Best Buy" width={20} height={20} />
       </a>
     </div>
-  );
+  )
 }
 
 interface PurchaseLinksModalProps {
-  isOpen: boolean;
-  onOpenChange: (isOpen: boolean) => void;
-  selectedComponents: { [key: string]: PCComponent | undefined };
+  isOpen: boolean
+  onOpenChange: (isOpen: boolean) => void
+  selectedComponents: { [key: string]: PCComponent | undefined }
 }
 
 function PurchaseLinksModal({ isOpen, onOpenChange, selectedComponents }: PurchaseLinksModalProps) {
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState(false)
 
   const componentsList = [
-    { key: 'cpu', label: 'CPU', icon: Cpu },
-    { key: 'gpu', label: 'GPU', icon: Monitor },
-    { key: 'motherboard', label: 'Motherboard', icon: Motherboard },
-    { key: 'ram', label: 'RAM', icon: MemoryStick },
-    { key: 'storage', label: 'Storage', icon: HardDrive },
-    { key: 'psu', label: 'PSU', icon: Power },
-    { key: 'case', label: 'Case', icon: Box },
-  ];
+    { key: "cpu", label: "CPU", icon: Cpu },
+    { key: "gpu", label: "GPU", icon: Monitor },
+    { key: "motherboard", label: "Motherboard", icon: Motherboard },
+    { key: "ram", label: "RAM", icon: MemoryStick },
+    { key: "storage", label: "Storage", icon: HardDrive },
+    { key: "psu", label: "PSU", icon: Power },
+    { key: "case", label: "Case", icon: Box },
+  ]
 
   const generateBuildList = () =>
     componentsList
       .filter(c => selectedComponents[c.key])
       .map(c => {
-        const component = selectedComponents[c.key]!;
-        return `${c.label}: ${component.name} - $${component.price}`;
+        const component = selectedComponents[c.key]!
+        return `${c.label}: ${component.name} - $${component.price}`
       })
-      .join('\n');
+      .join("\n")
 
   const handleCopyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(generateBuildList());
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1800);
-    } catch (err) {
-      console.error("Failed to copy", err);
+      await navigator.clipboard.writeText(generateBuildList())
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1800)
+    } catch {
+      setCopied(false)
     }
-  };
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -160,9 +197,9 @@ function PurchaseLinksModal({ isOpen, onOpenChange, selectedComponents }: Purcha
         <div className="px-6 pb-4 max-h-[55vh] overflow-y-auto">
           <div className="divide-y divide-border border border-border/50 rounded-md">
             {componentsList.map(c => {
-              const component = selectedComponents[c.key];
-              if (!component) return null;
-              const Icon = c.icon;
+              const component = selectedComponents[c.key]
+              if (!component) return null
+              const Icon = c.icon
               return (
                 <div
                   key={c.key}
@@ -173,17 +210,13 @@ function PurchaseLinksModal({ isOpen, onOpenChange, selectedComponents }: Purcha
                       <Icon className="h-5 w-5 text-muted-foreground" />
                     </span>
                     <div className="min-w-0">
-                      <div className="font-medium text-foreground truncate">
-                        {component.name}
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        ${component.price}
-                      </div>
+                      <div className="font-medium text-foreground truncate">{component.name}</div>
+                      <div className="text-xs text-muted-foreground">${component.price}</div>
                     </div>
                   </div>
                   <PurchaseLinks componentName={component.name} />
                 </div>
-              );
+              )
             })}
           </div>
         </div>
@@ -212,110 +245,85 @@ function PurchaseLinksModal({ isOpen, onOpenChange, selectedComponents }: Purcha
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }
 
-// --- MAIN COMPONENT ---
-
 export function PCCustomizer() {
-  const [selectedBuild, setSelectedBuild] = useState<Record<string, string>>(presetBuilds.budget);
-  const [activePreset, setActivePreset] = useState("budget");
-  const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
-  const [shareCopied, setShareCopied] = useState(false);
+  const [selectedBuild, setSelectedBuild] = useState<Record<string, string>>(presetBuilds.budget)
+  const [activePreset, setActivePreset] = useState("budget")
+  const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false)
 
-  const getComponent = (category: string, id: string): PCComponent | undefined => {
-    return components[category]?.find((comp) => comp.id === id);
-  };
-  
+  const getComponent = (category: string, id: string): PCComponent | undefined =>
+    components[category]?.find(comp => comp.id === id)
+
   const selectedComponentsForModal = Object.fromEntries(
     Object.entries(selectedBuild).map(([key, id]) => [key, getComponent(key, id)])
-  );
+  )
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    const params = new URLSearchParams(window.location.search);
-    const categories = Object.keys(components);
-    const newBuild: Record<string, string> = {};
-    let found = false;
+    if (typeof window === "undefined") return
+    const params = new URLSearchParams(window.location.search)
+    const categories = Object.keys(components)
+    const newBuild: Record<string, string> = {}
+    let found = false
     categories.forEach(category => {
-      const value = params.get(category);
+      const value = params.get(category)
       if (value) {
-        const comp = components[category]?.find(c => c.id === value);
+        const comp = components[category]?.find(c => c.id === value)
         if (comp) {
-          newBuild[category] = comp.id;
-          found = true;
+          newBuild[category] = comp.id
+          found = true
         }
       }
-    });
+    })
     if (found) {
-      setSelectedBuild(prev => ({ ...prev, ...newBuild }));
-      setActivePreset("custom");
+      setSelectedBuild(prev => ({ ...prev, ...newBuild }))
+      setActivePreset("custom")
     }
-  }, []);
+  }, [])
 
-  const getTotalPrice = () => Object.values(selectedBuild).reduce((total, id) => {
-    const category = Object.keys(components).find(cat => components[cat].some(comp => comp.id === id));
-    return total + (category ? getComponent(category, id)?.price || 0 : 0);
-  }, 0);
+  const getTotalPrice = () =>
+    Object.values(selectedBuild).reduce((total, id) => {
+      const category = Object.keys(components).find(cat =>
+        components[cat].some(comp => comp.id === id)
+      )
+      return total + (category ? getComponent(category, id)?.price || 0 : 0)
+    }, 0)
 
-  const checkCompatibility = () => {
-    const issues: string[] = [];
-    const cpu = getComponent("cpu", selectedBuild.cpu);
-    const motherboard = getComponent("motherboard", selectedBuild.motherboard);
-    const ram = getComponent("ram", selectedBuild.ram);
-    const psu = getComponent("psu", selectedBuild.psu);
-
-    if (cpu && motherboard && !motherboard.compatibility.includes(cpu.compatibility[0])) issues.push("CPU socket incompatible with motherboard.");
-    if (ram && motherboard && !motherboard.compatibility.includes(ram.compatibility[0])) issues.push("RAM type incompatible with motherboard.");
-    
-    const totalPower = Object.values(selectedBuild).reduce((total, id) => {
-        const category = Object.keys(components).find(cat => components[cat].some(comp => comp.id === id));
-        return total + (category ? getComponent(category, id)?.power || 0 : 0);
-    }, 0);
-    if (psu && Math.abs(psu.power) < totalPower) issues.push(`PSU wattage may be insufficient.`);
-
-    return { issues, totalPower, psuCapacity: psu ? Math.abs(psu.power) : 0 };
-  };
-  
   const calculatePerformanceTier = () => {
-    const cpu = getComponent("cpu", selectedBuild.cpu);
-    const gpu = getComponent("gpu", selectedBuild.gpu);
-    if (!cpu || !gpu) return "budget";
-    const tierValues = { everyday: 0, budget: 1, basic: 2, esports: 3, advanced: 4, creator: 5, master: 6 };
-    const avgTier = Math.round((tierValues[gpu.performanceTier] * 0.7) + (tierValues[cpu.performanceTier] * 0.3));
-    const tierNames = ["everyday", "budget", "basic", "esports", "advanced", "creator", "master"];
-    return tierNames[Math.min(tierNames.length - 1, Math.max(0, avgTier))];
-  };
+    const cpu = getComponent("cpu", selectedBuild.cpu)
+    const gpu = getComponent("gpu", selectedBuild.gpu)
+    if (!cpu || !gpu) return "budget"
+    const tierValues = { everyday: 0, budget: 1, basic: 2, esports: 3, advanced: 4, creator: 5, master: 6 }
+    const avgTier = Math.round(
+      tierValues[gpu.performanceTier] * 0.7 + tierValues[cpu.performanceTier] * 0.3
+    )
+    const tierNames = ["everyday", "budget", "basic", "esports", "advanced", "creator", "master"]
+    return tierNames[Math.min(tierNames.length - 1, Math.max(0, avgTier))]
+  }
 
   const getGamePerformance = () => {
-    const tier = calculatePerformanceTier();
+    const tier = calculatePerformanceTier()
     return Object.entries(gamePerformanceDatabase).map(([game, tiers]) => ({
       game,
       performance1080p: tiers[tier]?.["1080p"] || "N/A",
       performance1440p: tiers[tier]?.["1440p"] || "N/A",
-    }));
-  };
+    }))
+  }
 
   const getLimitations = (price: number) => {
-    if (price < 800)
-      return "Entry-level build suited for 1080p esports and light AAA with reduced settings.";
-    if (price < 1200)
-      return "Strong 1080p and good 1440p performance; some ultra settings may need tweaks.";
-    if (price < 2000)
-      return "Excellent 1440p and capable 4K in many titles; heavy ray tracing may reduce FPS.";
-    return "A top-tier 4K gaming machine, though the most demanding ray-traced games may dip below 100 FPS.";
-  };
+    if (price < 800) return "Entry-level build suited for 1080p esports and light AAA with reduced settings."
+    if (price < 1200) return "Strong 1080p and good 1440p performance; some ultra settings may need tweaks."
+    if (price < 2000) return "Excellent 1440p and capable 4K in many titles; heavy ray tracing may reduce FPS."
+    return "A top-tier 4K gaming machine, though the most demanding ray-traced games may dip below 100 FPS."
+  }
 
-  // FIX: initialize and implement updateComponent (previously caused: 'const' declarations must be initialized)
-  const updateComponent = (
-    category: keyof typeof selectedBuild,
-    componentId: string
-  ) => {
+  const updateComponent = (category: keyof typeof selectedBuild, componentId: string) => {
     setSelectedBuild(prev => ({
       ...prev,
       [category]: componentId,
-    }));
-  };
+    }))
+  }
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
@@ -323,45 +331,70 @@ export function PCCustomizer() {
         <CardHeader>
           <CardTitle>PC Builder</CardTitle>
           <div className="flex flex-wrap gap-2">
-            <Badge variant={activePreset === "everyday" ? "default" : "outline"} onClick={() => { setSelectedBuild(presetBuilds.everyday); setActivePreset("everyday"); }} className="cursor-pointer">Everyday</Badge>
-            <Badge variant={activePreset === "budget" ? "default" : "outline"} onClick={() => { setSelectedBuild(presetBuilds.budget); setActivePreset("budget"); }} className="cursor-pointer">Budget</Badge>
-            <Badge variant={activePreset === "basic" ? "default" : "outline"} onClick={() => { setSelectedBuild(presetBuilds.basic); setActivePreset("basic"); }} className="cursor-pointer">Basic</Badge>
-            <Badge variant={activePreset === "esports" ? "default" : "outline"} onClick={() => { setSelectedBuild(presetBuilds.esports); setActivePreset("esports"); }} className="cursor-pointer">Esports</Badge>
-            <Badge variant={activePreset === "advanced" ? "default" : "outline"} onClick={() => { setSelectedBuild(presetBuilds.advanced); setActivePreset("advanced"); }} className="cursor-pointer">Advanced</Badge>
-            <Badge variant={activePreset === "creator" ? "default" : "outline"} onClick={() => { setSelectedBuild(presetBuilds.creator); setActivePreset("creator"); }} className="cursor-pointer">Creator</Badge>
-            <Badge variant={activePreset === "master" ? "default" : "outline"} onClick={() => { setSelectedBuild(presetBuilds.master); setActivePreset("master"); }} className="cursor-pointer">Master</Badge>
-            <Badge variant="outline" onClick={() => { setSelectedBuild(presetBuilds.budget); setActivePreset("budget"); }} className="cursor-pointer ml-auto">Reset to Budget Build</Badge>
+            {["everyday","budget","basic","esports","advanced","creator","master"].map(tier => (
+              <Badge
+                key={tier}
+                variant={activePreset === tier ? "default" : "outline"}
+                onClick={() => { setSelectedBuild(presetBuilds[tier]); setActivePreset(tier); }}
+                className="cursor-pointer"
+              >
+                {tier.charAt(0).toUpperCase() + tier.slice(1)}
+              </Badge>
+            ))}
+            <Badge
+              variant="outline"
+              onClick={() => { setSelectedBuild(presetBuilds.budget); setActivePreset("budget") }}
+              className="cursor-pointer ml-auto"
+            >
+              Reset to Budget Build
+            </Badge>
           </div>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-4">
-              {Object.keys(components).map((category) => {
-                const component = getComponent(category, selectedBuild[category]);
-                const ComponentIcon = category === "cpu" ? Cpu : category === "gpu" ? Monitor : category === "motherboard" ? Motherboard : category === "ram" ? MemoryStick : category === "storage" ? HardDrive : category === "psu" ? Power : category === "case" ? Box : null;
+              {Object.keys(components).map(category => {
+                const component = getComponent(category, selectedBuild[category])
+                const ComponentIcon =
+                  category === "cpu" ? Cpu :
+                  category === "gpu" ? Monitor :
+                  category === "motherboard" ? Motherboard :
+                  category === "ram" ? MemoryStick :
+                  category === "storage" ? HardDrive :
+                  category === "psu" ? Power :
+                  category === "case" ? Box : null
                 return (
                   <div key={category} className="p-4 bg-muted rounded-lg flex items-center gap-4">
                     {ComponentIcon && <ComponentIcon className="h-8 w-8 text-muted-foreground" />}
                     <div className="flex-1">
-                      <div className="text-sm text-muted-foreground">{category.charAt(0).toUpperCase() + category.slice(1)}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {category.charAt(0).toUpperCase() + category.slice(1)}
+                      </div>
                       {component ? (
-                        <div className="font-medium text-foreground">{component.name} - ${component.price}</div>
+                        <div className="font-medium text-foreground">
+                          {component.name} - ${component.price}
+                        </div>
                       ) : (
                         <div className="text-sm text-muted-foreground">No component selected</div>
                       )}
                     </div>
-                    <Select onValueChange={(value) => updateComponent(category as keyof typeof selectedBuild, value)} defaultValue={selectedBuild[category]}>
-                      <SelectTrigger className="w-[120px]">
+                    <Select
+                      onValueChange={value => updateComponent(category as keyof typeof selectedBuild, value)}
+                      defaultValue={selectedBuild[category]}
+                    >
+                      <SelectTrigger className="w-[140px]">
                         <SelectValue placeholder="Select..." />
                       </SelectTrigger>
                       <SelectContent>
-                        {components[category].map((comp) => (
+                        {components[category].map(comp => (
                           <SelectItem
                             key={comp.id}
                             value={comp.id}
                             disabled={
                               category === "motherboard" &&
-                              !comp.compatibility.includes(getComponent("cpu", selectedBuild.cpu)?.compatibility[0] || "")
+                              !comp.compatibility.includes(
+                                getComponent("cpu", selectedBuild.cpu)?.compatibility[0] || ""
+                              )
                             }
                           >
                             {comp.name} - ${comp.price}
@@ -369,14 +402,13 @@ export function PCCustomizer() {
                         ))}
                       </SelectContent>
                     </Select>
-                    {/* Added inline purchase links for the selected component */}
                     {component && (
-                      <div className="ml-4">
+                      <div className="ml-3">
                         <PurchaseLinks componentName={component.name} />
                       </div>
                     )}
                   </div>
-                );
+                )
               })}
             </div>
             <div className="space-y-4">
@@ -386,7 +418,9 @@ export function PCCustomizer() {
               </div>
               <div className="p-4 bg-muted rounded-lg">
                 <div className="text-sm text-muted-foreground">Performance Tier</div>
-                <div className="text-lg font-semibold text-foreground">{calculatePerformanceTier().charAt(0).toUpperCase() + calculatePerformanceTier().slice(1)}</div>
+                <div className="text-lg font-semibold text-foreground">
+                  {calculatePerformanceTier().charAt(0).toUpperCase() + calculatePerformanceTier().slice(1)}
+                </div>
               </div>
               <div className="p-4 bg-muted rounded-lg">
                 <div className="text-sm text-muted-foreground">Game Performance (Estimated)</div>
@@ -411,10 +445,25 @@ export function PCCustomizer() {
         </CardContent>
       </Card>
       <div className="mt-4 flex gap-4">
-        <Button onClick={() => setIsPurchaseModalOpen(true)} className="flex-1">View Purchase Links</Button>
-        <Button variant="outline" className="flex-1" onClick={() => { setSelectedBuild(presetBuilds.budget); setActivePreset("budget"); }}>Reset Build</Button>
+        <Button onClick={() => setIsPurchaseModalOpen(true)} className="flex-1">
+          View Purchase Links
+        </Button>
+        <Button
+          variant="outline"
+          className="flex-1"
+          onClick={() => {
+            setSelectedBuild(presetBuilds.budget)
+            setActivePreset("budget")
+          }}
+        >
+          Reset Build
+        </Button>
       </div>
-      <PurchaseLinksModal isOpen={isPurchaseModalOpen} onOpenChange={setIsPurchaseModalOpen} selectedComponents={selectedComponentsForModal} />
+      <PurchaseLinksModal
+        isOpen={isPurchaseModalOpen}
+        onOpenChange={setIsPurchaseModalOpen}
+        selectedComponents={selectedComponentsForModal}
+      />
     </div>
-  );
+  )
 }
