@@ -106,44 +106,42 @@ const presetBuilds: Record<string, Record<string, string>> = {
   master: { cpu: "i9-14900k", gpu: "rtx4080s", motherboard: "z790-gaming", ram: "ddr5-32gb", storage: "nvme-4tb", psu: "psu-1000w", case: "case-north" },
 }
 
-interface PurchaseLinkProps {
+interface RetailerLinksProps {
   componentName: string
 }
 
-function PurchaseLinks({ componentName }: PurchaseLinkProps) {
-  const searchQuery = encodeURIComponent(componentName)
+/* Brand SVGs (single source) */
+const AmazonSvg = (p:{className?:string}) => (
+  <svg viewBox="0 0 512 512" className={p.className}><path fill="#111" d="M204 223c0-18 2-33 0-54-2-31-20-58-61-56-17 1-32 5-45 11-7 3-8 8-8 15l1 37c0 9 9 11 13 5 8-33 18-49 33-52 17-3 25 10 26 32l1 18c-20 5-66 12-85 36-6 8-11 18-11 32 0 29 16 47 37 47 28 0 41-20 61-43 1 16 1 23 7 37 2 6 5 8 11 8h34c7 0 9-3 7-10-6-16-7-37-7-67zm-45 25c-8 15-20 30-32 30-8 0-13-6-13-17 0-24 26-32 45-38 0 9 0 17 0 25zM352 254c-7 12-16 24-27 24-12 0-18-9-18-27 0-41 21-56 35-56 12 0 17 8 17 25 0 15-2 23-7 34zm97 26c-3-2-5-2-8-1-10 11-17 15-24 15-8 0-11-6-11-19v-96c0-5-2-8-6-8h-37c-4 0-6 3-6 7v10c-12-12-25-18-40-18-38 0-72 35-72 90 0 40 20 63 50 63 17 0 32-8 46-25 4 17 16 25 33 25 15 0 26-6 38-19 1 15 8 19 17 19h31c5 0 7-3 5-8-6-9-8-18-8-32v-44c0-34-12-53-43-53-18 0-33 6-50 24v-14c0-4-2-7-6-7h-33c-5 0-7 3-7 7v124c-7 8-14 12-21 12-13 0-21-10-21-34 0-46 22-63 37-63 6 0 10 2 14 5 5 4 11 0 11-6v-31c0-4-1-7-4-9-7-5-19-9-34-9-44 0-86 40-86 102 0 47 25 74 63 74 17 0 32-7 46-20 6 14 19 20 37 20 18 0 33-7 46-21 3 14 14 21 30 21 13 0 25-5 38-18 4-4 3-9 0-12l-19-21z"/><path fill="#FF9900" d="M472 320c-55 41-135 64-216 64-82 0-162-23-217-64-11-8-2-19 10-13 62 36 140 55 207 55 66 0 143-17 206-55 13-6 22 5 10 13z"/><path fill="#FF9900" d="M438 284c-8-10-53-12-79-9-6 1-7 6-1 10 53 36 125 26 80-1z"/></svg>
+)
+const NeweggSvg = (p:{className?:string}) => (
+  <svg viewBox="0 0 64 64" className={p.className}><ellipse cx="30" cy="32" rx="22" ry="20" fill="#fff"/><ellipse cx="40" cy="32" rx="16" ry="16" fill="#FFA640"/><path fill="#0F61A8" d="M45 19c3 3 5 7 5 13 0 11-7 19-19 19-8 0-14-3-18-8 4 3 10 5 16 5 14 0 23-9 23-21 0-3-1-6-2-8z"/></svg>
+)
+const BestBuySvg = (p:{className?:string}) => (
+  <svg viewBox="0 0 120 80" className={p.className}><path fill="#FFD400" d="M0 10h90l30 30-30 30H0z"/><text x="14" y="52" fontFamily="Arial Black, Arial" fontSize="30" fill="#000">BB</text></svg>
+)
+
+/* Bright solid buttons */
+function RetailerLinks({ componentName }: RetailerLinksProps) {
+  const q = encodeURIComponent(componentName)
+  const links = [
+    { name:"Amazon", href:`https://www.amazon.com/s?k=${q}&tag=ghostcustom12-20`, Icon:AmazonSvg, cls:"bg-[#FF9900] hover:bg-[#ffad33] text-[#111]" },
+    { name:"Newegg", href:`https://www.newegg.com/p/pl?d=${q}`, Icon:NeweggSvg, cls:"bg-[#1d6fe5] hover:bg-[#3788ff] text-white" },
+    { name:"Best Buy", href:`https://www.bestbuy.com/site/searchpage.jsp?st=${q}`, Icon:BestBuySvg, cls:"bg-[#ffe000] hover:bg-[#ffec4d] text-black" },
+  ]
   return (
-    <div className="flex items-center gap-1">
-      <a
-        href={`https://www.amazon.com/s?k=${searchQuery}&tag=ghostcustom12-20`}
-        target="_blank"
-        rel="noopener noreferrer"
-        title="Search on Amazon"
-        aria-label="Amazon"
-        className="inline-flex items-center justify-center w-8 h-8 rounded-md border border-border/40 bg-background hover:bg-accent/10 transition-colors"
-      >
-        <Image src="/amazon-logo.svg" alt="Amazon" width={20} height={20} />
-      </a>
-      <a
-        href={`https://www.newegg.com/p/pl?d=${searchQuery}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        title="Search on Newegg"
-        aria-label="Newegg"
-        className="inline-flex items-center justify-center w-8 h-8 rounded-md border border-border/40 bg-background hover:bg-accent/10 transition-colors"
-      >
-        <Image src="/newegg-logo.svg" alt="Newegg" width={20} height={20} />
-      </a>
-      <a
-        href={`https://www.bestbuy.com/site/searchpage.jsp?st=${searchQuery}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        title="Search on Best Buy"
-        aria-label="Best Buy"
-        className="inline-flex items-center justify-center w-8 h-8 rounded-md border border-border/40 bg-background hover:bg-accent/10 transition-colors"
-      >
-        <Image src="/bestbuy-logo.svg" alt="Best Buy" width={20} height={20} />
-      </a>
+    <div className="flex gap-2">
+      {links.map(({name,href,Icon,cls})=>(
+        <a key={name}
+           href={href}
+           target="_blank"
+           rel="noopener noreferrer"
+           aria-label={name}
+           className={`w-12 h-12 rounded-md flex items-center justify-center shadow border border-black/10 ${cls}
+                      transition focus:outline-none focus:ring-2 focus:ring-white/60 focus:ring-offset-1 focus:ring-offset-background active:scale-[0.95]`}>
+          <Icon className="h-5 w-5" />
+        </a>
+      ))}
     </div>
   )
 }
@@ -216,7 +214,7 @@ function PurchaseLinksModal({ isOpen, onOpenChange, selectedComponents }: Purcha
                       <div className="text-xs text-muted-foreground">${component.price}</div>
                     </div>
                   </div>
-                  <PurchaseLinks componentName={component.name} />
+                  <RetailerLinks componentName={component.name} />
                 </div>
               )
             })}
@@ -276,7 +274,7 @@ const CheckoutModal = ({ open, onOpenChange, selected, total }: CheckoutModalPro
                     <div className="font-medium truncate">{comp.name}</div>
                     <div className="text-xs text-muted-foreground">${comp.price}</div>
                   </div>
-                  <PurchaseLinks componentName={comp.name} />
+                  <RetailerLinks componentName={comp.name} />
                 </div>
               )
             })}
@@ -349,38 +347,49 @@ const QuoteRequestModal = ({ open, onOpenChange, selected, total }: QuoteRequest
   )
 }
 
-// --- Service Build (We Build It For You) Modal --------------------------------
+// --- Service Build (We Build It For You) Modal (UPDATED) ----------------------
 interface BuildServiceModalProps {
   open: boolean
-  onOpenChange: (v:boolean)=>void
-  selected: { [k:string]: PCComponent | undefined }
+  onOpenChange: (v: boolean) => void
+  selected: { [k: string]: PCComponent | undefined }
   partsSubtotal: number
 }
 
 const BuildServiceModal = ({ open, onOpenChange, selected, partsSubtotal }: BuildServiceModalProps) => {
-  // Editable pricing model (adjust to your business later)
-  // Option A: flat base + percentage
-  const SERVICE_BASE_FEE = 149   // flat labor / handling
-  const SERVICE_PERCENT   = 0.07 // 7% of parts subtotal
-  // Option B (uncomment to use tiered):
-  // const tierFee = partsSubtotal < 1000 ? 129 : partsSubtotal < 2000 ? 179 : 229
-
+  const SERVICE_BASE_FEE = 149
+  const SERVICE_PERCENT  = 0.07
   const serviceFee = Math.round(SERVICE_BASE_FEE + partsSubtotal * SERVICE_PERCENT)
-  const estimatedShipping = Math.round(Math.min(120, Math.max(45, partsSubtotal * 0.04))) // rough placeholder
+  const estimatedShipping = Math.round(Math.min(120, Math.max(45, partsSubtotal * 0.04)))
   const totalWithService = partsSubtotal + serviceFee + estimatedShipping
-
   const items = Object.entries(selected).filter(([,v])=>v)
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-xl p-0 overflow-hidden">
-        <DialogHeader className="px-6 pt-6 pb-2">
+      {/* Force top alignment by overriding default center translate (shadcn uses data-[state=open] animations) */}
+      <DialogContent
+        className="
+          sm:max-w-xl w-[92vw] p-0 overflow-hidden
+          flex flex-col
+          max-h-[92vh]
+          data-[state=open]:translate-y-0
+          top-[4vh] -translate-y-0
+        "
+      >
+        <DialogHeader className="px-6 pt-5 pb-2 shrink-0 sticky top-0 bg-background/95 backdrop-blur z-10 border-b">
           <DialogTitle>Professional Build Service</DialogTitle>
           <DialogDescription>
             We purchase, assemble, cable manage, OS install, stress test, and ship to you.
           </DialogDescription>
         </DialogHeader>
-        <div className="px-6 pb-5 max-h-[55vh] overflow-y-auto">
+
+        {/* Scrollable middle area */}
+        <div className="flex-1 overflow-y-auto px-6 pt-4 pb-4 space-y-5">
           <div className="divide-y border rounded-md">
+            {items.length === 0 && (
+              <div className="px-4 py-6 text-sm text-muted-foreground text-center">
+                No parts selected yet.
+              </div>
+            )}
             {items.map(([key, comp])=>{
               if(!comp) return null
               return (
@@ -392,14 +401,9 @@ const BuildServiceModal = ({ open, onOpenChange, selected, partsSubtotal }: Buil
                 </div>
               )
             })}
-            {items.length === 0 && (
-              <div className="px-4 py-6 text-sm text-muted-foreground text-center">
-                No parts selected yet.
-              </div>
-            )}
           </div>
 
-          <div className="mt-5 space-y-2 text-sm">
+          <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-muted-foreground">Parts Subtotal</span>
               <span>${partsSubtotal}</span>
@@ -418,23 +422,30 @@ const BuildServiceModal = ({ open, onOpenChange, selected, partsSubtotal }: Buil
             </div>
           </div>
 
-          <p className="mt-4 text-[11px] leading-snug text-muted-foreground">
-            Final invoice may adjust for real shipping, regional tax, or part availability. No payment is taken yet.
-            You will receive an email with confirmation & next steps.
+          <p className="text-[11px] leading-snug text-muted-foreground">
+            Final invoice may adjust for real shipping, regional tax, or part availability.
+            No payment taken yet. You will receive a confirmation email & next steps.
           </p>
         </div>
-        <DialogFooter className="px-6 pb-6 gap-2 flex-col sm:flex-row">
-          <Button variant="outline" className="w-full" onClick={()=>onOpenChange(false)}>Cancel</Button>
+
+        {/* Sticky footer always visible */}
+        <DialogFooter className="px-6 pb-5 pt-3 gap-2 shrink-0 sticky bottom-0 bg-background/95 backdrop-blur border-t flex-col sm:flex-row">
           <Button
+            variant="outline"
             className="w-full"
-            onClick={()=>{
-              // TODO: Trigger pre-order / lead capture (e.g. open quote form pre-filled)
-              // For now just close:
-              onOpenChange(false)
-            }}
+            onClick={()=>onOpenChange(false)}
           >
-            Start Order (Request Invoice)
+            Cancel
           </Button>
+            <Button
+              className="w-full"
+              onClick={()=>{
+                // TODO: trigger lead capture / API call
+                onOpenChange(false)
+              }}
+            >
+              Start Order (Request Invoice)
+            </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -601,7 +612,7 @@ export function PCCustomizer() {
                     </Select>
                     {component && (
                       <div className="ml-3">
-                        <PurchaseLinks componentName={component.name} />
+                        <RetailerLinks componentName={component.name} />
                       </div>
                     )}
                   </div>
@@ -685,6 +696,9 @@ export function PCCustomizer() {
         selected={selectedComponentsForModal}
         partsSubtotal={getTotalPrice()}
       />
+      <div className="mt-3">
+        <RetailerLinks componentName="AMD Ryzen 5 5600G" />
+      </div>
     </div>
   )
 }

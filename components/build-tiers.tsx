@@ -1,6 +1,5 @@
 "use client"
 
-import Image from "next/image"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -8,45 +7,48 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Cpu, HardDrive, Monitor, Zap, DollarSign, Star, Trophy, Crown, Gamepad2, AlertTriangle, Box, Briefcase, Video, CheckCircle } from "lucide-react"
 
-interface PurchaseLinkProps {
-  component: string
+// --- Replace old PurchaseLinkProps + PurchaseLinks with this -------------------
+interface RetailerLinksProps {
+  componentName: string
   className?: string
 }
 
-function PurchaseLinks({ component, className = "" }: PurchaseLinkProps) {
-  const searchQuery = encodeURIComponent(component)
+const AmazonSvg = ({ className="h-5 w-5" }) => (
+  <svg viewBox="0 0 512 512" className={className}><path fill="#111" d="M204 223c0-18..."/> <path fill="#FF9900" d="M472 320c-55 41-135 64-216 64-82 0-162-23-217-64-11-8-2-19 10-13 62 36 140 55 207 55 66 0 143-17 206-55 13-6 22 5 10 13z"/><path fill="#FF9900" d="M438 284c-8-10-53-12-79-9-6 1-7 6-1 10 53 36 125 26 80-1z"/></svg>
+)
+const NeweggSvg = ({ className="h-5 w-5" }) => (
+  <svg viewBox="0 0 64 64" className={className}><ellipse cx="30" cy="32" rx="22" ry="20" fill="#fff"/><ellipse cx="40" cy="32" rx="16" ry="16" fill="#FFA640"/><path fill="#0F61A8" d="M45 19c3 3 5 7 5 13 0 11-7 19-19 19-8 0-14-3-18-8 4 3 10 5 16 5 14 0 23-9 23-21 0-3-1-6-2-8z"/></svg>
+)
+const BestBuySvg = ({ className="h-5 w-5" }) => (
+  <svg viewBox="0 0 120 80" className={className}><path fill="#FFD400" d="M0 10h90l30 30-30 30H0z"/><text x="14" y="52" fontFamily="Arial Black, Arial" fontSize="30" fill="#000">BB</text></svg>
+)
+
+function RetailerLinks({ componentName, className="" }: RetailerLinksProps) {
+  const q = encodeURIComponent(componentName)
+  const links = [
+    { name:"Amazon", href:`https://www.amazon.com/s?k=${q}&tag=ghostcustom12-20`, Icon:AmazonSvg, cls:"bg-[#FF9900] hover:bg-[#ffad33] text-[#111]" },
+    { name:"Newegg", href:`https://www.newegg.com/p/pl?d=${q}`, Icon:NeweggSvg, cls:"bg-[#1d6fe5] hover:bg-[#3788ff] text-white" },
+    { name:"Best Buy", href:`https://www.bestbuy.com/site/searchpage.jsp?st=${q}`, Icon:BestBuySvg, cls:"bg-[#ffe000] hover:bg-[#ffec4d] text-black" },
+  ]
   return (
-    <div className={`flex gap-2 group ${className}`}>
-      <a
-        href={`https://www.amazon.com/s?k=${searchQuery}&tag=ghostcustom12-20`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-block p-1 hover:bg-accent/10 rounded transition-all duration-200 hover:scale-110 hover:brightness-110 cursor-pointer group-hover:opacity-50 hover:!opacity-100"
-        title="Search on Amazon"
-      >
-        <Image src="/amazon-logo.svg" alt="Amazon" width={24} height={24} className="pointer-events-none text-white hover:text-accent" />
-      </a>
-      <a
-        href={`https://www.newegg.com/p/pl?d=${searchQuery}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-block p-1 hover:bg-accent/10 rounded transition-all duration-200 hover:scale-110 hover:brightness-110 cursor-pointer group-hover:opacity-50 hover:!opacity-100"
-        title="Search on Newegg"
-      >
-        <Image src="/newegg-logo.svg" alt="Newegg" width={24} height={24} className="pointer-events-none text-white hover:text-accent" />
-      </a>
-      <a
-        href={`https://www.bestbuy.com/site/searchpage.jsp?st=${searchQuery}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-block p-1 hover:bg-accent/10 rounded transition-all duration-200 hover:scale-110 hover:brightness-110 cursor-pointer group-hover:opacity-50 hover:!opacity-100"
-        title="Search on Best Buy"
-      >
-        <Image src="/bestbuy-logo.svg" alt="Best Buy" width={24} height={24} className="pointer-events-none text-white hover:text-accent" />
-      </a>
+    <div className={`flex gap-2 ${className}`}>
+      {links.map(({name,href,Icon,cls})=>(
+        <a
+          key={name}
+          href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+          aria-label={name}
+          className={`w-9 h-9 rounded-md flex items-center justify-center shadow border border-black/10 ${cls} transition
+                      focus:outline-none focus:ring-2 focus:ring-white/70 focus:ring-offset-1 focus:ring-offset-background active:scale-[0.95]`}
+        >
+          <Icon className="h-5 w-5" />
+        </a>
+      ))}
     </div>
   )
 }
+// --- End replacement ----------------------------------------------------------
 
 const gamePerformanceData = {
   everyday: [
@@ -389,35 +391,35 @@ export function BuildTiers({ selectedBuilds, setSelectedBuilds }: BuildTiersProp
                           <Cpu className="h-4 w-4" />
                           <span>{tier.specs.cpu}</span>
                         </div>
-                        <PurchaseLinks component={tier.specs.cpu} />
+                        <RetailerLinks componentName={tier.specs.cpu} />
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <Monitor className="h-4 w-4" />
                           <span>{tier.specs.gpu}</span>
                         </div>
-                        <PurchaseLinks component={tier.specs.gpu} />
+                        <RetailerLinks componentName={tier.specs.gpu} />
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <Zap className="h-4 w-4" />
                           <span>{tier.specs.ram}</span>
                         </div>
-                        <PurchaseLinks component={tier.specs.ram} />
+                        <RetailerLinks componentName={tier.specs.ram} />
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <HardDrive className="h-4 w-4" />
                           <span>{tier.specs.storage}</span>
                         </div>
-                        <PurchaseLinks component={tier.specs.storage} />
+                        <RetailerLinks componentName={tier.specs.storage} />
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <Box className="h-4 w-4" />
                           <span>{tier.specs.case}</span>
                         </div>
-                        <PurchaseLinks component={tier.specs.case} />
+                        <RetailerLinks componentName={tier.specs.case} />
                       </div>
                     </div>
                   </div>

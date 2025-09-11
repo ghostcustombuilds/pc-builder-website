@@ -318,3 +318,9 @@ a,
   background: var(--accent);
   color: var(--accent-foreground);
 }
+
+/* Ensure dialog can align near top */
+[data-radix-popper-content-wrapper] > div[data-state='open'].top-dialog {
+  top: 4vh !important;
+  transform: none !important;
+}
