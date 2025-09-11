@@ -1,8 +1,115 @@
-<a
-  href={`https://www.amazon.com/s?k=${encodeURIComponent(componentName)}&tag=ghostcustom12-20`}
-  target="_blank"
-  rel="noopener noreferrer"
-  title="Search on Amazon"
+// ...existing code...
+
+// REMOVE: useState for modal
+// const [isCopyModalOpen, setIsCopyModalOpen] = useState(false)
+
+// REMOVE: CopyBuildModal component
+/*
+function CopyBuildModal({ selectedComponents, isOpen, onOpenChange }: CopyBuildModalProps) {
+  const [copied, setCopied] = useState(false)
+
+  const generateBuildList = () => {
+    const components = [
+      { key: 'cpu', label: 'CPU', icon: Cpu },
+      { key: 'gpu', label: 'GPU', icon: Monitor },
+      { key: 'motherboard', label: 'Motherboard', icon: Motherboard },
+      { key: 'ram', label: 'RAM', icon: MemoryStick },
+      { key: 'storage', label: 'Storage', icon: HardDrive },
+      { key: 'psu', label: 'PSU', icon: Power },
+      { key: 'case', label: 'Case', icon: Box },
+    ]
+    return components
+      .filter(comp => selectedComponents[comp.key])
+      .map(comp => {
+        const component = selectedComponents[comp.key]!
+        return `${comp.label}: ${component.name} - $${component.price}`
+      })
+      .join('\n')
+  }
+
+  const handleCopyToClipboard = async () => {
+    try {
+      const buildList = generateBuildList()
+      await navigator.clipboard.writeText(buildList)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (err) {
+      console.error('Failed to copy to clipboard:', err)
+    }
+  }
+
+  const buildList = generateBuildList()
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Copy Build List</DialogTitle>
+          <DialogDescription>
+            Copy your selected components to share or save for later.
+          </DialogDescription>
+        </DialogHeader>
+        
+        <div className="space-y-4">
+          <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+            <pre className="text-sm whitespace-pre-wrap font-mono">
+              {buildList || "No components selected"}
+            </pre>
+          </div>
+        </div>
+
+        <DialogFooter>
+          <Button
+            onClick={handleCopyToClipboard}
+            disabled={!buildList}
+            className="w-full"
+          >
+            {copied ? (
+              <>
+                <Check className="w-4 h-4 mr-2" />
+                Copied to clipboard!
+              </>
+            ) : (
+              <>
+                <Copy className="w-4 h-4 mr-2" />
+                Copy to Clipboard
+              </>
+            )}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
+*/
+
+// REMOVE: Button that opens the modal (inside Build Summary or relevant section)
+/*
+<Button
+  variant="outline"
+  className="w-full hover:shadow-[0_0_20px_rgba(255,140,0,0.3)] hover:border-accent/50 transition-all duration-300"
+  onClick={() => setIsCopyModalOpen(true)}
 >
-  {/* ...existing code... */}
-</a>
+  <Copy className="h-4 w-4 mr-2" />
+  Buy Parts Yourself
+</Button>
+*/
+
+// REMOVE: <CopyBuildModal ... /> from render
+/*
+<CopyBuildModal
+  selectedComponents={{
+    cpu: getComponent("cpu", selectedBuild.cpu),
+    gpu: getComponent("gpu", selectedBuild.gpu),
+    motherboard: getComponent("motherboard", selectedBuild.motherboard),
+    ram: getComponent("ram", selectedBuild.ram),
+    storage: getComponent("storage", selectedBuild.storage),
+    psu: getComponent("psu", selectedBuild.psu),
+    case: getComponent("case", selectedBuild.case),
+  }}
+  isOpen={isCopyModalOpen}
+  onOpenChange={setIsCopyModalOpen}
+/>
+*/
+
+//

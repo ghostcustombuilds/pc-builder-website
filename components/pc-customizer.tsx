@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import React, { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -157,547 +157,191 @@ interface PCComponent {
   name: string
   price: number
   category: string
-  compatibility: string[]
-  power: number
-  performanceTier: "budget" | "basic" | "advanced" | "master"
-  image?: string
-}
+  export function PCCustomizer() {
+    const [selectedBuild, setSelectedBuild] = useState(presetBuilds.budget)
+    const [activePreset, setActivePreset] = useState("budget")
+    const [isCopyModalOpen, setIsCopyModalOpen] = useState(false)
 
-const components: Record<string, PCComponent[]> = {
-  cpu: [
-    {
-      id: "ryzen5-5600g",
-      name: "AMD Ryzen 5 5600G",
-      price: 159,
-      category: "cpu",
-      compatibility: ["am4"],
-      power: 65,
-      performanceTier: "budget",
-    },
-    {
-      id: "ryzen5-7600x",
-      name: "AMD Ryzen 5 7600X",
-      price: 229,
-      category: "cpu",
-      compatibility: ["am5"],
-      power: 105,
-      performanceTier: "basic",
-    },
-    {
-      id: "ryzen7-7700x",
-      name: "AMD Ryzen 7 7700X",
-      price: 349,
-      category: "cpu",
-      compatibility: ["am5"],
-      power: 105,
-      performanceTier: "advanced",
-    },
-    {
-      id: "i5-13600k",
-      name: "Intel Core i5-13600K",
-      price: 319,
-      category: "cpu",
-      compatibility: ["lga1700"],
-      power: 125,
-      performanceTier: "basic",
-    },
-    {
-      id: "i7-13700k",
-      name: "Intel Core i7-13700K",
-      price: 409,
-      category: "cpu",
-      compatibility: ["lga1700"],
-      power: 125,
-      performanceTier: "advanced",
-    },
-    {
-      id: "i7-14700k",
-      name: "Intel Core i7-14700K",
-      price: 399,
-      category: "cpu",
-      compatibility: ["lga1700"],
-      power: 125,
-      performanceTier: "creator",
-    },
-    {
-      id: "i9-14900k",
-      name: "Intel Core i9-14900K",
-      price: 589,
-      category: "cpu",
-      compatibility: ["lga1700"],
-      power: 125,
-      performanceTier: "master",
-    },
-  ],
-  gpu: [
-    {
-      id: "gtx1660s",
-      name: "NVIDIA GTX 1660 Super",
-      price: 229,
-      category: "gpu",
-      compatibility: ["pcie4"],
-      power: 125,
-      performanceTier: "budget",
-    },
-    {
-      id: "rtx4060",
-      name: "NVIDIA RTX 4060",
-      price: 299,
-      category: "gpu",
-      compatibility: ["pcie4"],
-      power: 115,
-      performanceTier: "basic",
-    },
-    {
-      id: "rtx4070",
-      name: "NVIDIA RTX 4070",
-      price: 599,
-      category: "gpu",
-      compatibility: ["pcie4"],
-      power: 200,
-      performanceTier: "advanced",
-    },
-    {
-      id: "rtx4070s",
-      name: "NVIDIA RTX 4070 Super",
-      price: 699,
-      category: "gpu",
-      compatibility: ["pcie4"],
-      power: 220,
-      performanceTier: "advanced",
-    },
-    {
-      id: "rtx4080s",
-      name: "NVIDIA RTX 4080 Super",
-      price: 999,
-      category: "gpu",
-      compatibility: ["pcie4"],
-      power: 320,
-      performanceTier: "master",
-    },
-  ],
-  motherboard: [
-    {
-      id: "a520-gaming",
-      name: "ASUS A520M-A",
-      price: 69,
-      category: "motherboard",
-      compatibility: ["am4", "ddr4"],
-      power: 0,
-      performanceTier: "everyday",
-    },
-    {
-      id: "b450-gaming",
-      name: "MSI B450 Gaming Plus",
-      price: 89,
-      category: "motherboard",
-      compatibility: ["am4", "ddr4"],
-      power: 0,
-      performanceTier: "budget",
-    },
-    {
-      id: "b650-gaming",
-      name: "MSI B650 Gaming Plus",
-      price: 179,
-      category: "motherboard",
-      compatibility: ["am5", "ddr5"],
-      power: 0,
-      performanceTier: "basic",
-    },
-    {
-      id: "x670e-pro",
-      name: "ASUS X670E-PRO",
-      price: 329,
-      category: "motherboard",
-      compatibility: ["am5", "ddr5"],
-      power: 0,
-      performanceTier: "advanced",
-    },
-    {
-      id: "z790-gaming",
-      name: "MSI Z790 Gaming Plus",
-      price: 219,
-      category: "motherboard",
-      compatibility: ["lga1700", "ddr5"],
-      power: 0,
-      performanceTier: "basic",
-    },
-    {
-      id: "z790-pro",
-      name: "ASUS Z790-PRO",
-      price: 399,
-      category: "motherboard",
-      compatibility: ["lga1700", "ddr5"],
-      power: 0,
-      performanceTier: "advanced",
-    },
-  ],
-  ram: [
-    {
-      id: "ddr4-16gb-3200",
-      name: "16GB DDR4-3200",
-      price: 59,
-      category: "ram",
-      compatibility: ["ddr4"],
-      power: 8,
-      performanceTier: "budget",
-    },
-    {
-      id: "ddr5-16gb-5600",
-      name: "16GB DDR5-5600",
-      price: 89,
-      category: "ram",
-      compatibility: ["ddr5"],
-      power: 10,
-      performanceTier: "basic",
-    },
-    {
-      id: "ddr5-32gb-5600",
-      name: "32GB DDR5-5600",
-      price: 179,
-      category: "ram",
-      compatibility: ["ddr5"],
-      power: 15,
-      performanceTier: "advanced",
-    },
-    {
-      id: "ddr5-16gb-6000",
-      name: "16GB DDR5-6000 RGB",
-      price: 119,
-      category: "ram",
-      compatibility: ["ddr5"],
-      power: 12,
-      performanceTier: "basic",
-    },
-    {
-      id: "ddr5-32gb-6000",
-      name: "32GB DDR5-6000 RGB",
-      price: 229,
-      category: "ram",
-      compatibility: ["ddr5"],
-      power: 18,
-      performanceTier: "advanced",
-    },
-  ],
-  storage: [
-    {
-      id: "nvme-500gb",
-      name: "500GB NVMe SSD",
-      price: 59,
-      category: "storage",
-      compatibility: ["nvme"],
-      power: 5,
-      performanceTier: "budget",
-    },
-    {
-      id: "nvme-1tb",
-      name: "1TB NVMe SSD",
-      price: 89,
-      category: "storage",
-      compatibility: ["nvme"],
-      power: 7,
-      performanceTier: "basic",
-    },
-    {
-      id: "nvme-2tb",
-      name: "2TB NVMe SSD",
-      price: 179,
-      category: "storage",
-      compatibility: ["nvme"],
-      power: 8,
-      performanceTier: "advanced",
-    },
-    {
-      id: "nvme-4tb",
-      name: "4TB NVMe SSD",
-      price: 399,
-      category: "storage",
-      compatibility: ["nvme"],
-      power: 10,
-      performanceTier: "master",
-    },
-  ],
-  psu: [
-    {
-      id: "450w-bronze",
-      name: "450W 80+ Bronze PSU",
-      price: 59,
-      category: "psu",
-      compatibility: ["atx"],
-      power: -450,
-      performanceTier: "everyday",
-    },
-    {
-      id: "650w-gold",
-      name: "650W 80+ Gold PSU",
-      price: 89,
-      category: "psu",
-      compatibility: ["atx"],
-      power: -650,
-      performanceTier: "budget",
-    },
-    {
-      id: "750w-gold",
-      name: "750W 80+ Gold PSU",
-      price: 119,
-      category: "psu",
-      compatibility: ["atx"],
-      power: -750,
-      performanceTier: "basic",
-    },
-    {
-      id: "850w-gold",
-      name: "850W 80+ Gold PSU",
-      price: 149,
-      category: "psu",
-      compatibility: ["atx"],
-      power: -850,
-      performanceTier: "advanced",
-    },
-    {
-      id: "1000w-gold",
-      name: "1000W 80+ Gold PSU",
-      price: 199,
-      category: "psu",
-      compatibility: ["atx"],
-      power: -1000,
-      performanceTier: "master",
-    },
-  ],
-  case: [
-    {
-      id: "fractal-core-1100",
-      name: "Fractal Design Core 1100",
-      price: 49,
-      category: "case",
-      compatibility: ["atx", "micro-atx", "mini-itx"],
-      power: 0,
-      performanceTier: "everyday",
-    },
-    {
-      id: "corsair-4000d",
-      name: "Corsair 4000D Airflow",
-      price: 89,
-      category: "case",
-      compatibility: ["atx", "micro-atx", "mini-itx"],
-      power: 0,
-      performanceTier: "budget",
-    },
-    {
-      id: "lian-li-215",
-      name: "Lian Li Lancool 215",
-      price: 79,
-      category: "case",
-      compatibility: ["atx", "micro-atx", "mini-itx"],
-      power: 0,
-      performanceTier: "basic",
-    },
-    {
-      id: "nzxt-h5-flow",
-      name: "NZXT H5 Flow",
-      price: 99,
-      category: "case",
-      compatibility: ["atx", "micro-atx", "mini-itx"],
-      power: 0,
-      performanceTier: "esports",
-    },
-    {
-      id: "fractal-pop-air",
-      name: "Fractal Design Pop Air",
-      price: 89,
-      category: "case",
-      compatibility: ["atx", "micro-atx", "mini-itx"],
-      power: 0,
-      performanceTier: "advanced",
-    },
-    {
-      id: "fractal-north",
-      name: "Fractal Design North",
-      price: 149,
-      category: "case",
-      compatibility: ["atx", "micro-atx", "mini-itx"],
-      power: 0,
-      performanceTier: "creator",
-    },
-    {
-      id: "hyte-y60",
-      name: "Hyte Y60",
-      price: 199,
-      category: "case",
-      compatibility: ["atx", "micro-atx", "mini-itx"],
-      power: 0,
-      performanceTier: "master",
-    },
-  ],
-}
+    const getComponent = (category: string, id: string) => {
+      return components[category]?.find((comp) => comp.id === id)
+    }
 
-const gamePerformanceDatabase = {
-  Fortnite: {
-    budget: { "1080p": "60+ FPS", "1440p": "45+ FPS" },
-    basic: { "1080p": "120+ FPS", "1440p": "75+ FPS" },
-    advanced: { "1080p": "165+ FPS", "1440p": "120+ FPS" },
-    master: { "1080p": "240+ FPS", "1440p": "165+ FPS" },
-  },
-  Valorant: {
-    budget: { "1080p": "150+ FPS", "1440p": "100+ FPS" },
-    basic: { "1080p": "200+ FPS", "1440p": "150+ FPS" },
-    advanced: { "1080p": "300+ FPS", "1440p": "200+ FPS" },
-    master: { "1080p": "400+ FPS", "1440p": "300+ FPS" },
-  },
-  "Cyberpunk 2077": {
-    budget: { "1080p": "35+ FPS", "1440p": "25+ FPS" },
-    basic: { "1080p": "55+ FPS", "1440p": "40+ FPS" },
-    advanced: { "1080p": "75+ FPS", "1440p": "55+ FPS" },
-    master: { "1080p": "100+ FPS", "1440p": "75+ FPS" },
-  },
-  "Call of Duty MW3": {
-    budget: { "1080p": "65+ FPS", "1440p": "45+ FPS" },
-    basic: { "1080p": "100+ FPS", "1440p": "70+ FPS" },
-    advanced: { "1080p": "140+ FPS", "1440p": "100+ FPS" },
-    master: { "1080p": "180+ FPS", "1440p": "140+ FPS" },
-  },
-  "Elden Ring": {
-    budget: { "1080p": "45+ FPS", "1440p": "35+ FPS" },
-    basic: { "1080p": "60+ FPS", "1440p": "45+ FPS" },
-    advanced: { "1080p": "60+ FPS", "1440p": "60+ FPS" },
-    master: { "1080p": "60+ FPS", "1440p": "60+ FPS" },
-  },
-  Starfield: {
-    budget: { "1080p": "40+ FPS", "1440p": "30+ FPS" },
-    basic: { "1080p": "55+ FPS", "1440p": "40+ FPS" },
-    advanced: { "1080p": "70+ FPS", "1440p": "55+ FPS" },
-    master: { "1080p": "90+ FPS", "1440p": "70+ FPS" },
-  },
-  "League of Legends": {
-    budget: { "1080p": "120+ FPS", "1440p": "90+ FPS" },
-    basic: { "1080p": "180+ FPS", "1440p": "140+ FPS" },
-    advanced: { "1080p": "240+ FPS", "1440p": "180+ FPS" },
-    master: { "1080p": "300+ FPS", "1440p": "240+ FPS" },
-  },
-  "Apex Legends": {
-    budget: { "1080p": "60+ FPS", "1440p": "45+ FPS" },
-    basic: { "1080p": "100+ FPS", "1440p": "75+ FPS" },
-    advanced: { "1080p": "140+ FPS", "1440p": "100+ FPS" },
-    master: { "1080p": "180+ FPS", "1440p": "140+ FPS" },
-  },
-}
+    const calculatePerformanceTier = () => {
+      const cpu = getComponent("cpu", selectedBuild.cpu)
+      const gpu = getComponent("gpu", selectedBuild.gpu)
 
-const presetBuilds = {
-  everyday: {
-    cpu: "ryzen5-5600g",
-    gpu: "",
-    motherboard: "a520-gaming",
-    ram: "ddr4-16gb-3200",
-    storage: "nvme-500gb",
-    psu: "450w-bronze",
-    case: "fractal-core-1100",
-  },
-  budget: {
-    cpu: "ryzen5-5600g",
-    gpu: "gtx1660s",
-    motherboard: "b450-gaming",
-    ram: "ddr4-16gb-3200",
-    storage: "nvme-500gb",
-    psu: "650w-gold",
-    case: "corsair-4000d",
-  },
-  basic: {
-    cpu: "ryzen5-7600x",
-    gpu: "rtx4060",
-    motherboard: "b650-gaming",
-    ram: "ddr5-16gb-5600",
-    storage: "nvme-1tb",
-    psu: "750w-gold",
-    case: "lian-li-215",
-  },
-  advanced: {
-    cpu: "i7-13700k",
-    gpu: "rtx4070s",
-    motherboard: "z790-gaming",
-    ram: "ddr5-32gb-6000",
-    storage: "nvme-2tb",
-    psu: "850w-gold",
-    case: "fractal-pop-air",
-  },
-  creator: {
-    cpu: "i7-14700k",
-    gpu: "rtx4070s",
-    motherboard: "z790-gaming",
-    ram: "ddr5-32gb-6000",
-    storage: "nvme-2tb",
-    psu: "850w-gold",
-    case: "fractal-north",
-  },
-  master: {
-    cpu: "i9-14900k",
-    gpu: "rtx4080s",
-    motherboard: "z790-pro",
-    ram: "ddr5-32gb-6000",
-    storage: "nvme-4tb",
-    psu: "1000w-gold",
-    case: "hyte-y60",
-  },
-}
+      if (!cpu || !gpu) return "budget"
 
-export function PCCustomizer() {
-  const [selectedBuild, setSelectedBuild] = useState(presetBuilds.budget)
-  const [activePreset, setActivePreset] = useState("budget")
-  const [isCopyModalOpen, setIsCopyModalOpen] = useState(false)
+      const gpuTier = gpu.performanceTier
+      const cpuTier = cpu.performanceTier
 
-  const getComponent = (category: string, id: string) => {
-    return components[category]?.find((comp) => comp.id === id)
-  }
+      const tierValues = { everyday: 0, budget: 1, basic: 2, esports: 3, advanced: 4, creator: 5, master: 6 }
+      const avgTier = Math.round(tierValues[gpuTier] * 0.7 + tierValues[cpuTier] * 0.3)
 
-  const calculatePerformanceTier = () => {
-    const cpu = getComponent("cpu", selectedBuild.cpu)
-    const gpu = getComponent("gpu", selectedBuild.gpu)
+      const tierNames = ["everyday", "budget", "basic", "esports", "advanced", "creator", "master"]
+      return tierNames[Math.max(0, Math.min(6, avgTier))] as "everyday" | "budget" | "basic" | "esports" | "advanced" | "creator" | "master"
+    }
 
-    if (!cpu || !gpu) return "budget"
+    const getGamePerformance = () => {
+      const performanceTier = calculatePerformanceTier()
+      const results = []
 
-    const gpuTier = gpu.performanceTier
-    const cpuTier = cpu.performanceTier
+      for (const [game, tiers] of Object.entries(gamePerformanceDatabase)) {
+        results.push({
+          game,
+          performance1080p: tiers[performanceTier]["1080p"],
+          performance1440p: tiers[performanceTier]["1440p"],
+        })
+      }
 
-    const tierValues = { budget: 1, basic: 2, advanced: 3, master: 4 }
-    const avgTier = Math.round(tierValues[gpuTier] * 0.7 + tierValues[cpuTier] * 0.3)
+      return results
+    }
 
-    const tierNames = ["budget", "basic", "advanced", "master"]
-    return tierNames[Math.max(0, Math.min(3, avgTier - 1))] as "budget" | "basic" | "advanced" | "master"
-  }
+    const checkCompatibility = () => {
+      const issues: string[] = []
+            {/* Dynamic Copy Build List */}
+            <CopyBuildList
+              components={{
+                cpu: getComponent("cpu", selectedBuild.cpu),
+                gpu: getComponent("gpu", selectedBuild.gpu),
+                motherboard: getComponent("motherboard", selectedBuild.motherboard),
+                ram: getComponent("ram", selectedBuild.ram),
+                storage: getComponent("storage", selectedBuild.storage),
+                psu: getComponent("psu", selectedBuild.psu),
+                case: getComponent("case", selectedBuild.case),
+              }}
+            />
+      const cpu = getComponent("cpu", selectedBuild.cpu)
+      const motherboard = getComponent("motherboard", selectedBuild.motherboard)
+        return "Perfect for everyday tasks, browsing, and light productivity. Not designed for modern gaming - suitable only for light, older, or browser-based games."
+      } else if (price >= 600 && price < 800) {
+        return "This build may struggle with new AAA titles at high or ultra settings and is not recommended for 1440p gaming."
+      } else if (price >= 800 && price < 1200) {
+        return "Optimized for high-framerate 1080p gaming. May not achieve a consistent 60 FPS in the most demanding AAA titles at 1440p."
+      } else if (price >= 1200 && price < 2000) {
+        return "Excellent for 1440p gaming, but not powerful enough for a smooth, max-settings 4K gaming experience in most new titles."
+      } else {
+        return "This is a top-tier 4K gaming machine. However, the most graphically intense ray-traced games may still dip below 100 FPS at maximum settings."
+      }
+    }
 
-  const getGamePerformance = () => {
+    const updateComponent = (category: string, componentId: string) => {
+      setSelectedBuild((prev) => ({
+        ...prev,
+        [category]: componentId,
+      }))
+      setActivePreset("custom")
+    }
+
+    const loadPreset = (preset: string) => {
+      if (preset === "everyday") {
+        setSelectedBuild(presetBuilds.everyday)
+      } else if (preset === "budget") {
+        setSelectedBuild(presetBuilds.budget)
+      } else if (preset === "basic") {
+        setSelectedBuild(presetBuilds.basic)
+      } else if (preset === "advanced") {
+        setSelectedBuild(presetBuilds.advanced)
+      } else if (preset === "creator") {
+        setSelectedBuild(presetBuilds.creator)
+      } else if (preset === "master") {
+        setSelectedBuild(presetBuilds.master)
+      } else if (preset === "esports") {
+        // If you have an esports preset, add it here
+        // setSelectedBuild(presetBuilds.esports)
+      }
+      setActivePreset(preset)
+    }
+
+    const compatibility = checkCompatibility()
+    const totalPrice = getTotalPrice()
     const performanceTier = calculatePerformanceTier()
-    const results = []
+    const gamePerformance = getGamePerformance()
 
-    for (const [game, tiers] of Object.entries(gamePerformanceDatabase)) {
-      results.push({
-        game,
-        performance1080p: tiers[performanceTier]["1080p"],
-        performance1440p: tiers[performanceTier]["1440p"],
-      })
+    const componentIcons = {
+      cpu: Cpu,
+      gpu: Monitor,
+      motherboard: Motherboard,
+      ram: MemoryStick,
+      storage: HardDrive,
+      psu: Power,
+      case: Box,
     }
 
-    return results
+    return (
+      <section id="customizer" className="py-24 px-4 bg-muted/30">
+        {/* ...existing code... */}
+      </section>
+    )
   }
-
-  const checkCompatibility = () => {
-    const issues = []
-    const cpu = getComponent("cpu", selectedBuild.cpu)
-    const motherboard = getComponent("motherboard", selectedBuild.motherboard)
-    const ram = getComponent("ram", selectedBuild.ram)
-    const psu = getComponent("psu", selectedBuild.psu)
-
-    if (cpu && motherboard) {
-      const cpuSocket = cpu.compatibility[0]
-      if (!motherboard.compatibility.includes(cpuSocket)) {
-        issues.push("CPU socket doesn't match motherboard")
-      }
-    }
-
-    if (ram && motherboard) {
-      if (!motherboard.compatibility.includes("ddr5") && ram.compatibility.includes("ddr5")) {
-        issues.push("RAM type not supported by motherboard")
-      }
-    }
+      advanced: { "1080p": "165+ FPS", "1440p": "120+ FPS" },
+      creator: { "1080p": "200+ FPS", "1440p": "150+ FPS" },
+      master: { "1080p": "240+ FPS", "1440p": "165+ FPS" },
+    },
+    Valorant: {
+      everyday: { "1080p": "80+ FPS", "1440p": "60+ FPS" },
+      budget: { "1080p": "150+ FPS", "1440p": "100+ FPS" },
+      basic: { "1080p": "200+ FPS", "1440p": "150+ FPS" },
+      esports: { "1080p": "250+ FPS", "1440p": "180+ FPS" },
+      advanced: { "1080p": "300+ FPS", "1440p": "200+ FPS" },
+      creator: { "1080p": "350+ FPS", "1440p": "250+ FPS" },
+      master: { "1080p": "400+ FPS", "1440p": "300+ FPS" },
+    },
+    "Cyberpunk 2077": {
+      everyday: { "1080p": "20+ FPS", "1440p": "10+ FPS" },
+      budget: { "1080p": "35+ FPS", "1440p": "25+ FPS" },
+      basic: { "1080p": "55+ FPS", "1440p": "40+ FPS" },
+      esports: { "1080p": "65+ FPS", "1440p": "50+ FPS" },
+      advanced: { "1080p": "75+ FPS", "1440p": "55+ FPS" },
+      creator: { "1080p": "85+ FPS", "1440p": "65+ FPS" },
+      master: { "1080p": "100+ FPS", "1440p": "75+ FPS" },
+    },
+    "Call of Duty MW3": {
+      everyday: { "1080p": "30+ FPS", "1440p": "20+ FPS" },
+      budget: { "1080p": "65+ FPS", "1440p": "45+ FPS" },
+      basic: { "1080p": "100+ FPS", "1440p": "70+ FPS" },
+      esports: { "1080p": "120+ FPS", "1440p": "90+ FPS" },
+      advanced: { "1080p": "140+ FPS", "1440p": "100+ FPS" },
+      creator: { "1080p": "160+ FPS", "1440p": "120+ FPS" },
+      master: { "1080p": "180+ FPS", "1440p": "140+ FPS" },
+    },
+    "Elden Ring": {
+      everyday: { "1080p": "25+ FPS", "1440p": "15+ FPS" },
+      budget: { "1080p": "45+ FPS", "1440p": "35+ FPS" },
+      basic: { "1080p": "60+ FPS", "1440p": "45+ FPS" },
+      esports: { "1080p": "60+ FPS", "1440p": "60+ FPS" },
+      advanced: { "1080p": "60+ FPS", "1440p": "60+ FPS" },
+      creator: { "1080p": "60+ FPS", "1440p": "60+ FPS" },
+      master: { "1080p": "60+ FPS", "1440p": "60+ FPS" },
+    },
+    Starfield: {
+      everyday: { "1080p": "20+ FPS", "1440p": "10+ FPS" },
+      budget: { "1080p": "40+ FPS", "1440p": "30+ FPS" },
+      basic: { "1080p": "55+ FPS", "1440p": "40+ FPS" },
+      esports: { "1080p": "65+ FPS", "1440p": "50+ FPS" },
+      advanced: { "1080p": "70+ FPS", "1440p": "55+ FPS" },
+      creator: { "1080p": "80+ FPS", "1440p": "65+ FPS" },
+      master: { "1080p": "90+ FPS", "1440p": "70+ FPS" },
+    },
+    "League of Legends": {
+      everyday: { "1080p": "60+ FPS", "1440p": "40+ FPS" },
+      budget: { "1080p": "120+ FPS", "1440p": "90+ FPS" },
+      basic: { "1080p": "180+ FPS", "1440p": "140+ FPS" },
+      esports: { "1080p": "220+ FPS", "1440p": "180+ FPS" },
+      advanced: { "1080p": "240+ FPS", "1440p": "180+ FPS" },
+      creator: { "1080p": "270+ FPS", "1440p": "210+ FPS" },
+      master: { "1080p": "300+ FPS", "1440p": "240+ FPS" },
+    },
+    "Apex Legends": {
+      everyday: { "1080p": "30+ FPS", "1440p": "20+ FPS" },
+      budget: { "1080p": "60+ FPS", "1440p": "45+ FPS" },
+      basic: { "1080p": "100+ FPS", "1440p": "75+ FPS" },
+      esports: { "1080p": "120+ FPS", "1440p": "90+ FPS" },
+      advanced: { "1080p": "140+ FPS", "1440p": "100+ FPS" },
+      creator: { "1080p": "160+ FPS", "1440p": "120+ FPS" },
+      master: { "1080p": "180+ FPS", "1440p": "140+ FPS" },
+    },
+  }
 
     const totalPower = Object.entries(selectedBuild).reduce((total, [category, id]) => {
       const component = getComponent(category, id)
@@ -1122,17 +766,58 @@ export function PCCustomizer() {
       {/* Copy Build Modal */}
       <CopyBuildModal
         selectedComponents={{
-          cpu: getComponent("cpu", selectedBuild.cpu),
-          gpu: getComponent("gpu", selectedBuild.gpu),
-          motherboard: getComponent("motherboard", selectedBuild.motherboard),
-          ram: getComponent("ram", selectedBuild.ram),
-          storage: getComponent("storage", selectedBuild.storage),
-          psu: getComponent("psu", selectedBuild.psu),
-          case: getComponent("case", selectedBuild.case),
+          cpu: getComponent("cpu", selectedBuild.cpu) ?? null,
+          gpu: getComponent("gpu", selectedBuild.gpu) ?? null,
+          motherboard: getComponent("motherboard", selectedBuild.motherboard) ?? null,
+          ram: getComponent("ram", selectedBuild.ram) ?? null,
+          storage: getComponent("storage", selectedBuild.storage) ?? null,
+          psu: getComponent("psu", selectedBuild.psu) ?? null,
+          case: getComponent("case", selectedBuild.case) ?? null,
         }}
         isOpen={isCopyModalOpen}
         onOpenChange={setIsCopyModalOpen}
       />
     </section>
   )
-}
+import CopyBuildList from "@/components/CopyBuildList";
+
+<CopyBuildList
+  components={{
+    cpu: {
+      name: "AMD Ryzen 5 5600G",
+      price: 159,
+      link: "https://www.amazon.com/dp/B092L9GF5N?tag=ghostcustom12-20",
+    },
+    gpu: {
+      name: "NVIDIA GTX 1660 Super",
+      price: 229,
+      link: "https://www.amazon.com/dp/B07Z8PWC6R?tag=ghostcustom12-20",
+    },
+    motherboard: {
+      name: "MSI B450 Gaming Plus",
+      price: 89,
+      link: "https://www.amazon.com/s?k=msi+b450+gaming+plus&tag=ghostcustom12-20",
+    },
+    ram: {
+      name: "16GB DDR4-3200",
+      price: 59,
+      link: "https://www.amazon.com/dp/B08C56GZGK?tag=ghostcustom12-20",
+    },
+    storage: {
+      name: "500GB NVMe SSD",
+      price: 59,
+      link: "https://www.amazon.com/dp/B07YFF3JCN?tag=ghostcustom12-20",
+    },
+    psu: {
+      name: "650W 80+ Gold PSU",
+      price: 89,
+      link: "https://www.amazon.com/s?k=650w+gold+psu&tag=ghostcustom12-20",
+    },
+    case: {
+      name: "Corsair 4000D Airflow",
+      price: 89,
+      link: "https://www.amazon.com/dp/B08C7BGV3D?tag=ghostcustom12-20",
+    },
+  }}
+/>
+
