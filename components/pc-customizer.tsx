@@ -18,6 +18,8 @@ import {
   Copy,
   Check,
 } from "lucide-react"
+import Link from "next/link"
+import { Textarea } from "@/components/ui/textarea"
 
 interface PCComponent {
   id: string
@@ -248,10 +250,205 @@ function PurchaseLinksModal({ isOpen, onOpenChange, selectedComponents }: Purcha
   )
 }
 
+interface CheckoutModalProps {
+  open: boolean
+  onOpenChange: (v:boolean)=>void
+  selected: { [k:string]: PCComponent | undefined }
+  total: number
+}
+
+const CheckoutModal = ({ open, onOpenChange, selected, total }: CheckoutModalProps) => {
+  const items = Object.entries(selected).filter(([,v])=>v)
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-xl p-0 overflow-hidden">
+        <DialogHeader className="px-6 pt-6 pb-2">
+          <DialogTitle>Review & Purchase</DialogTitle>
+          <DialogDescription>Select a retailer to buy each part.</DialogDescription>
+        </DialogHeader>
+        <div className="px-6 max-h-[55vh] overflow-y-auto pb-4">
+          <div className="divide-y border rounded-md">
+            {items.map(([key, comp])=>{
+              if(!comp) return null
+              return (
+                <div key={key} className="flex items-center gap-4 px-4 py-3 bg-background/40">
+                  <div className="flex-1 min-w-0">
+                    <div className="font-medium truncate">{comp.name}</div>
+                    <div className="text-xs text-muted-foreground">${comp.price}</div>
+                  </div>
+                  <PurchaseLinks componentName={comp.name} />
+                </div>
+              )
+            })}
+          </div>
+          <div className="mt-4 flex justify-between text-sm font-medium">
+            <span>Subtotal</span>
+            <span>${total}</span>
+          </div>
+          <p className="mt-3 text-[11px] text-muted-foreground leading-snug">
+            As an Amazon Associate I earn from qualifying purchases. Retail purchases complete on external retailer sites.
+          </p>
+        </div>
+        <DialogFooter className="px-6 pb-6">
+          <Button className="w-full" onClick={()=>onOpenChange(false)}>Close</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+interface QuoteRequestModalProps {
+  open: boolean
+  onOpenChange: (v:boolean)=>void
+  selected: { [k:string]: PCComponent | undefined }
+  total: number
+}
+
+const QuoteRequestModal = ({ open, onOpenChange, selected, total }: QuoteRequestModalProps) => {
+  const buildText = Object.entries(selected)
+    .filter(([,v])=>v)
+    .map(([k,v])=>`${k.toUpperCase()}: ${v!.name} - $${v!.price}`)
+    .join("\n")
+  const handleSubmit = (e:React.FormEvent) => {
+    e.preventDefault()
+    // TODO: POST to /api/quote
+    onOpenChange(false)
+  }
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-lg">
+        <DialogHeader>
+          <DialogTitle>Request a Build Quote</DialogTitle>
+          <DialogDescription>Send your selected parts & notes. We’ll reply by email.</DialogDescription>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="text-sm font-medium">Name</label>
+            <input required name="name" className="mt-1 w-full rounded-md border bg-background px-3 py-2 text-sm" />
+          </div>
+          <div>
+            <label className="text-sm font-medium">Email</label>
+            <input required type="email" name="email" className="mt-1 w-full rounded-md border bg-background px-3 py-2 text-sm" />
+          </div>
+            <div>
+              <label className="text-sm font-medium">Notes / Goals</label>
+              <textarea name="notes" rows={4} className="mt-1 w-full rounded-md border bg-background px-3 py-2 text-sm" placeholder="Budget, primary games, editing needs..." />
+            </div>
+          <div>
+            <label className="text-xs text-muted-foreground">Selected Parts</label>
+            <pre className="mt-1 max-h-40 overflow-auto rounded-md border bg-muted p-2 text-[11px] leading-snug">{buildText || "No parts selected"}</pre>
+            <div className="mt-2 text-xs font-medium">Estimated Total: ${total}</div>
+          </div>
+          <DialogFooter className="gap-2">
+            <Button type="button" variant="outline" onClick={()=>onOpenChange(false)}>Cancel</Button>
+            <Button type="submit">Send Quote</Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+// --- Service Build (We Build It For You) Modal --------------------------------
+interface BuildServiceModalProps {
+  open: boolean
+  onOpenChange: (v:boolean)=>void
+  selected: { [k:string]: PCComponent | undefined }
+  partsSubtotal: number
+}
+
+const BuildServiceModal = ({ open, onOpenChange, selected, partsSubtotal }: BuildServiceModalProps) => {
+  // Editable pricing model (adjust to your business later)
+  // Option A: flat base + percentage
+  const SERVICE_BASE_FEE = 149   // flat labor / handling
+  const SERVICE_PERCENT   = 0.07 // 7% of parts subtotal
+  // Option B (uncomment to use tiered):
+  // const tierFee = partsSubtotal < 1000 ? 129 : partsSubtotal < 2000 ? 179 : 229
+
+  const serviceFee = Math.round(SERVICE_BASE_FEE + partsSubtotal * SERVICE_PERCENT)
+  const estimatedShipping = Math.round(Math.min(120, Math.max(45, partsSubtotal * 0.04))) // rough placeholder
+  const totalWithService = partsSubtotal + serviceFee + estimatedShipping
+
+  const items = Object.entries(selected).filter(([,v])=>v)
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-xl p-0 overflow-hidden">
+        <DialogHeader className="px-6 pt-6 pb-2">
+          <DialogTitle>Professional Build Service</DialogTitle>
+          <DialogDescription>
+            We purchase, assemble, cable manage, OS install, stress test, and ship to you.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="px-6 pb-5 max-h-[55vh] overflow-y-auto">
+          <div className="divide-y border rounded-md">
+            {items.map(([key, comp])=>{
+              if(!comp) return null
+              return (
+                <div key={key} className="flex items-center gap-4 px-4 py-3 bg-background/40">
+                  <div className="flex-1 min-w-0">
+                    <div className="font-medium truncate">{comp.name}</div>
+                    <div className="text-xs text-muted-foreground">${comp.price}</div>
+                  </div>
+                </div>
+              )
+            })}
+            {items.length === 0 && (
+              <div className="px-4 py-6 text-sm text-muted-foreground text-center">
+                No parts selected yet.
+              </div>
+            )}
+          </div>
+
+          <div className="mt-5 space-y-2 text-sm">
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Parts Subtotal</span>
+              <span>${partsSubtotal}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Build Service Fee</span>
+              <span>${serviceFee}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Est. Shipping / Packaging</span>
+              <span>${estimatedShipping}</span>
+            </div>
+            <div className="flex justify-between font-semibold pt-1 border-t">
+              <span>Estimated Total</span>
+              <span>${totalWithService}</span>
+            </div>
+          </div>
+
+          <p className="mt-4 text-[11px] leading-snug text-muted-foreground">
+            Final invoice may adjust for real shipping, regional tax, or part availability. No payment is taken yet.
+            You will receive an email with confirmation & next steps.
+          </p>
+        </div>
+        <DialogFooter className="px-6 pb-6 gap-2 flex-col sm:flex-row">
+          <Button variant="outline" className="w-full" onClick={()=>onOpenChange(false)}>Cancel</Button>
+          <Button
+            className="w-full"
+            onClick={()=>{
+              // TODO: Trigger pre-order / lead capture (e.g. open quote form pre-filled)
+              // For now just close:
+              onOpenChange(false)
+            }}
+          >
+            Start Order (Request Invoice)
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
+// --- End Service Build Modal --------------------------------------------------
+
 export function PCCustomizer() {
   const [selectedBuild, setSelectedBuild] = useState<Record<string, string>>(presetBuilds.budget)
   const [activePreset, setActivePreset] = useState("budget")
   const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false)
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false)
+  const [isQuoteOpen, setIsQuoteOpen] = useState(false)
+  const [isServiceModalOpen, setIsServiceModalOpen] = useState(false)
 
   const getComponent = (category: string, id: string): PCComponent | undefined =>
     components[category]?.find(comp => comp.id === id)
@@ -444,14 +641,20 @@ export function PCCustomizer() {
           </div>
         </CardContent>
       </Card>
-      <div className="mt-4 flex gap-4">
-        <Button onClick={() => setIsPurchaseModalOpen(true)} className="flex-1">
-          View Purchase Links
+      <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+        <Button className="flex-1" onClick={()=>setIsCheckoutOpen(true)}>
+          Review & Purchase
+        </Button>
+        <Button className="flex-1" variant="secondary" onClick={()=>setIsServiceModalOpen(true)}>
+          We Build It For You
+        </Button>
+        <Button variant="outline" className="flex-1" onClick={()=>setIsQuoteOpen(true)}>
+          Request Quote
         </Button>
         <Button
-          variant="outline"
+          variant="ghost"
           className="flex-1"
-          onClick={() => {
+          onClick={()=>{
             setSelectedBuild(presetBuilds.budget)
             setActivePreset("budget")
           }}
@@ -463,6 +666,24 @@ export function PCCustomizer() {
         isOpen={isPurchaseModalOpen}
         onOpenChange={setIsPurchaseModalOpen}
         selectedComponents={selectedComponentsForModal}
+      />
+      <CheckoutModal
+        open={isCheckoutOpen}
+        onOpenChange={setIsCheckoutOpen}
+        selected={selectedComponentsForModal}
+        total={getTotalPrice()}
+      />
+      <QuoteRequestModal
+        open={isQuoteOpen}
+        onOpenChange={setIsQuoteOpen}
+        selected={selectedComponentsForModal}
+        total={getTotalPrice()}
+      />
+      <BuildServiceModal
+        open={isServiceModalOpen}
+        onOpenChange={setIsServiceModalOpen}
+        selected={selectedComponentsForModal}
+        partsSubtotal={getTotalPrice()}
       />
     </div>
   )
