@@ -20,6 +20,7 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { Textarea } from "@/components/ui/textarea"
+import { useRouter } from "next/navigation"
 
 interface PCComponent {
   id: string
@@ -443,8 +444,9 @@ const BuildServiceModal = ({ open, onOpenChange, selected, partsSubtotal }: Buil
                 // TODO: trigger lead capture / API call
                 onOpenChange(false)
               }}
+              aria-label="Place Build Order"
             >
-              Start Order (Request Invoice)
+              Place Build Order
             </Button>
         </DialogFooter>
       </DialogContent>
@@ -460,6 +462,7 @@ export function PCCustomizer() {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false)
   const [isQuoteOpen, setIsQuoteOpen] = useState(false)
   const [isServiceModalOpen, setIsServiceModalOpen] = useState(false)
+  const router = useRouter()
 
   const getComponent = (category: string, id: string): PCComponent | undefined =>
     components[category]?.find(comp => comp.id === id)
@@ -531,6 +534,25 @@ export function PCCustomizer() {
       ...prev,
       [category]: componentId,
     }))
+  }
+
+  function handleCheckout() {
+    try {
+      const build = {
+        cpu: selectedCpu,
+        gpu: selectedGpu,
+        motherboard: selectedMotherboard,
+        memory: selectedMemory,
+        storage: selectedStorage,
+        case: selectedCase,
+        psu: selectedPsu,
+        totalPrice: totalPrice
+      }
+      localStorage.setItem("pendingBuild", JSON.stringify(build))
+      router.push("/checkout")
+    } catch (e) {
+      console.error("Failed to start checkout", e)
+    }
   }
 
   return (
