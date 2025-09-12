@@ -110,40 +110,54 @@ interface PurchaseLinkProps {
   componentName: string
 }
 
+// Inline brand SVGs
+const AmazonLogo = ({ className="h-5 w-5" }: { className?: string }) => (
+  <svg viewBox="0 0 512 512" className={className} aria-hidden="true">
+    <path fill="#111" d="M204 223c0-18 2-33 0-54-2-31-20-58-61-56-17 1-32 5-45 11-7 3-8 8-8 15l1 37c0 9 9 11 13 5 8-33 18-49 33-52 17-3 25 10 26 32l1 18c-20 5-66 12-85 36-6 8-11 18-11 32 0 29 16 47 37 47 28 0 41-20 61-43 1 16 1 23 7 37 2 6 5 8 11 8h34c7 0 9-3 7-10-6-16-7-37-7-67zm-45 25c-8 15-20 30-32 30-8 0-13-6-13-17 0-24 26-32 45-38 0 9 0 17 0 25z"/>
+    <path fill="#FF9900" d="M472 320c-55 41-135 64-216 64-82 0-162-23-217-64-11-8-2-19 10-13 62 36 140 55 207 55 66 0 143-17 206-55 13-6 22 5 10 13z"/>
+    <path fill="#FF9900" d="M438 284c-8-10-53-12-79-9-6 1-7 6-1 10 53 36 125 26 80-1z"/>
+  </svg>
+)
+
+const NeweggLogo = ({ className="h-5 w-5" }: { className?: string }) => (
+  <svg viewBox="0 0 64 64" className={className} aria-hidden="true">
+    <ellipse cx="30" cy="32" rx="22" ry="20" fill="#ffffff"/>
+    <ellipse cx="39" cy="32" rx="17" ry="17" fill="#FF9F00"/>
+    <path fill="#1C3576" d="M45 19c3 3 5 7 5 13 0 11-7 19-19 19-8 0-14-3-18-8 4 3 10 5 16 5 14 0 23-9 23-21 0-3-1-6-2-8z"/>
+  </svg>
+)
+
+const BestBuyLogo = ({ className="h-5 w-5" }: { className?: string }) => (
+  <svg viewBox="0 0 120 80" className={className} aria-hidden="true">
+    <path fill="#FFD400" d="M0 10h90l30 30-30 30H0z"/>
+    <text x="15" y="50" fontFamily="Arial Black, Arial" fontSize="28" fill="#000">BB</text>
+  </svg>
+)
+
 function PurchaseLinks({ componentName }: PurchaseLinkProps) {
-  const searchQuery = encodeURIComponent(componentName)
+  const encoded = encodeURIComponent(componentName)
+  const links = [
+    { name: 'Amazon', href: `https://www.amazon.com/s?k=${encoded}&tag=ghostcustom12-20`, Icon: AmazonLogo, bg: 'bg-[#131921] hover:bg-[#232f3e] focus:ring-[#FF9900]/60' },
+    { name: 'Newegg', href: `https://www.newegg.com/p/pl?d=${encoded}`, Icon: NeweggLogo, bg: 'bg-[#0f1621] hover:bg-[#1d2735] focus:ring-[#1d2735]/60' },
+    { name: 'Best Buy', href: `https://www.bestbuy.com/site/searchpage.jsp?st=${encoded}`, Icon: BestBuyLogo, bg: 'bg-[#0046be] hover:bg-[#013b9d] focus:ring-[#0046be]/60' },
+  ]
   return (
-    <div className="flex items-center gap-1">
-      <a
-        href={`https://www.amazon.com/s?k=${searchQuery}&tag=ghostcustom12-20`}
-        target="_blank"
-        rel="noopener noreferrer"
-        title="Search on Amazon"
-        aria-label="Amazon"
-        className="inline-flex items-center justify-center w-8 h-8 rounded-md border border-border/40 bg-background hover:bg-accent/10 transition-colors"
-      >
-        <Image src="/amazon-logo.svg" alt="Amazon" width={20} height={20} />
-      </a>
-      <a
-        href={`https://www.newegg.com/p/pl?d=${searchQuery}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        title="Search on Newegg"
-        aria-label="Newegg"
-        className="inline-flex items-center justify-center w-8 h-8 rounded-md border border-border/40 bg-background hover:bg-accent/10 transition-colors"
-      >
-        <Image src="/newegg-logo.svg" alt="Newegg" width={20} height={20} />
-      </a>
-      <a
-        href={`https://www.bestbuy.com/site/searchpage.jsp?st=${searchQuery}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        title="Search on Best Buy"
-        aria-label="Best Buy"
-        className="inline-flex items-center justify-center w-8 h-8 rounded-md border border-border/40 bg-background hover:bg-accent/10 transition-colors"
-      >
-        <Image src="/bestbuy-logo.svg" alt="Best Buy" width={20} height={20} />
-      </a>
+    <div className="flex items-center gap-2">
+      {links.map(({ name, href, Icon, bg }) => (
+        <a
+          key={name}
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={name}
+          title={name}
+          className={`group inline-flex items-center justify-center w-10 h-10 rounded-md border border-border/40 ${bg}
+                      transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-offset-background`}
+        >
+          <Icon className="h-5 w-5 text-white opacity-90 group-hover:opacity-100" />
+          <span className="sr-only">{name}</span>
+        </a>
+      ))}
     </div>
   )
 }
